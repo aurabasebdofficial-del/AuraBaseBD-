@@ -1323,12 +1323,21 @@
                 timeline: o.tl || [],
                 notes: o.notes || []
             };
-            await supabaseRequest('orders?on_conflict=id', {
-                method: 'POST',
-                prefer: 'resolution=merge-duplicates',
-                body: JSON.stringify(row)
-            });
-        } catch(err) { console.error('upsertSingleOrder failed:', err); }
+                    const res = await supabaseRequest('orders?on_conflict=id', {
+            method: 'POST',
+            prefer: 'resolution=merge-duplicates',
+            body: JSON.stringify(row)
+        });
+        
+        if (res && res.error) {
+            alert("অর্ডার ডাটাবেজ রিজেক্ট করেছে: " + JSON.stringify(res.error));
+        } else {
+            alert("অভিনন্দন! অর্ডার ডাটাবেজে সেভ হয়েছে।");
+        }
+    } catch(err) { 
+        alert("অর্ডার সেভ হতে গিয়ে ক্র্যাশ করেছে: " + err.message);
+        console.error('upsertSingleOrder failed:', err);
+    }
     }
 
     // ============================================================
