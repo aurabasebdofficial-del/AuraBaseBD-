@@ -1281,14 +1281,22 @@
                 timeline: o.tl || [],
                 notes: o.notes || []
             }));
-            await supabaseRequest('orders?on_conflict=id', {
-                method: 'POST',
-                prefer: 'resolution=merge-duplicates',
-                body: JSON.stringify(rows)
-            });
-        } catch(err) { console.error('saveOrdersToSupabase failed:', err); }
+                    const res = await supabaseRequest('orders?on_conflict=id', {
+            method: 'POST',
+            prefer: 'resolution=merge-duplicates',
+            body: JSON.stringify(rows)
+        });
+        
+        if (res && res.error) {
+            alert("সুপারবেজ ডাটা রিজেক্ট করেছে: " + JSON.stringify(res.error));
+        } else {
+            alert("অর্ডার ডাটাবেজে পাঠানো হয়েছে! রেসপন্স: " + JSON.stringify(res));
+        }
+    } catch(err) { 
+        alert("সিস্টেম ক্র্যাশ করেছে! এরর: " + err.message);
+        console.error('saveOrdersToSupabase failed:', err); 
     }
-
+    }    
     async function upsertSingleOrder(o) {
         try {
             const row = {
