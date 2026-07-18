@@ -374,7 +374,7 @@
             <!-- Product Image Gallery Thumbnails -->
             <div id="pd-gallery-row" class="pd-gallery-row hidden"></div>
             <div class="flex justify-around items-center py-4 border-b border-slate-50">
-                <button onclick="downloadAllProductImages(event)" class="flex flex-col items-center gap-1.5 text-xs font-black text-gray-600 active:scale-95 transition-transform">
+                <button onclick="downloadMyImages()" class="flex flex-col items-center gap-1.5 text-xs font-black text-gray-600 active:scale-95 transition-all">
                     <div class="w-12 h-12 bg-sky-50 rounded-full flex items-center justify-center text-primary text-xl"><i class="fa-solid fa-download"></i></div>ছবি ডাউনলোড
                 </button>
                 <button class="flex flex-col items-center gap-1.5 text-xs font-black text-gray-600 active:scale-95 transition-transform">
@@ -3942,6 +3942,21 @@
     }
     // ========================= END WITHDRAW SYSTEM =========================
 
+function downloadMyImages() {
+    const images = document.querySelectorAll('#pd-gallery-row img');
+    if (images.length === 0) {
+        alert("ছবি পাওয়া যায়নি!");
+        return;
+    }
+    images.forEach((img, index) => {
+        const link = document.createElement('a');
+        link.href = img.src;
+        link.download = 'product-image-' + (index + 1) + '.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+        }
 </script>
 </body>
 </html>
