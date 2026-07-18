@@ -3826,14 +3826,15 @@
                 actions = `<button onclick="adminProcessWithdraw('${adEsc(w.id)}','Completed')" class="bg-teal-500 text-white px-2 py-1 rounded text-[10px] font-black active:scale-95"><i class="fa-solid fa-circle-check mr-1"></i>Complete</button>`;
             }
             return `<tr class="border-b hover:bg-slate-50">
-                <td class="p-2 text-[10px] font-black text-primary">${adEsc(w.id)}</td>
-                <td class="p-2 text-[10px] font-bold">${adEsc(w.phone)}</td>
-                <td class="p-2 text-[10px] font-bold">${adEsc(w.method)} · ${adEsc(w.account)}</td>
-                <td class="p-2 text-[10px] font-black text-green-700">৳${adNum(w.amount)}</td>
-                <td class="p-2">${badge}</td>
-                <td class="p-2 text-[10px] text-gray-400">${adEsc(w.dt||'')} ${adEsc(w.tm||'')}</td>
-                <td class="p-2 whitespace-nowrap">${actions}</td>
-            </tr>`;
+    <td class="p-2 text-[10px] font-black text-primary">${adEsc(w.id)}</td>
+    <td class="p-2 text-[10px] font-black">${adEsc(w.name)}</td>
+    <td class="p-2 text-[10px] font-black">${adEsc(w.phone)}</td>
+    <td class="p-2 text-[10px] font-bold text-green-700">${adNum(w.amount)}</td>
+    <td class="p-2 text-[10px] font-black">${badge}</td>
+    <td class="p-2 text-[10px] text-gray-400">${adEsc(w.dt)} ${adEsc(w.tm)}</td>
+    <td class="p-2 whitespace-nowrap">${actions}</td>
+</tr>`;
+</tr>`;
         }).join('') : '<tr><td colspan="7" class="p-6 text-center text-gray-400 text-xs">কোনো উইথড্র রিকোয়েস্ট নেই</td></tr>';
         c.innerHTML = `
             <div class="p-4 space-y-4">
