@@ -1437,15 +1437,17 @@
         try {
             const rows = await supabaseRequest('withdrawals?select=*&order=created_at.desc');
             if(Array.isArray(rows)) {
-                window._withdrawals = rows.map(r => ({
+                                window.withdrawals = rows.map(r => ({
                     id: r.wd_id || r.id || '',
                     phone: r.phone || '',
+                    name: r.name || 'N/A',
                     amount: Number(r.amount || 0),
                     method: r.method || '',
                     status: r.status || 'Pending',
                     dt: r.dt || r.created_at || '',
                     accountNumber: r.account_number || ''
                 }));
+
             }
         } catch(err) {
             console.error('Withdrawals load failed:', err);
