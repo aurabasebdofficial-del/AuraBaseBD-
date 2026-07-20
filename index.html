@@ -245,26 +245,17 @@
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <!-- সার্চ বার শুরু -->
-<div class="px-4 py-2">
-    <div class="relative">
-        <input type="text" id="global-search" placeholder="নাম বা SKU দিয়ে সার্চ করুন..." 
-               class="w-full bg-white border-2 border-primary rounded-2xl py-3 pl-12 pr-4 font-bold outline-none shadow-sm">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-primary text-lg"></i>
-    </div>
-</div>
-<!-- সার্চ বার শেষ -->
-                
+                <!-- প্রিমিয়াম সার্চ বক্স (নতুন পজিশন) -->
+<div class="relative w-full">
+    <input type="text" id="global-search" placeholder="কাঙ্ক্ষিত প্রোডাক্টটির নাম বা SKU দিয়ে সার্চ করুন..." 
+           class="w-full bg-white border-2 border-primary rounded-2xl py-3.5 pl-12 pr-4 font-bold outline-none shadow-md focus:ring-2 focus:ring-secondary/20 transition-all">
+    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-primary text-lg"></i>
+</div>   
                 <button id="balance-display" onclick="toggleBalance()" class="bg-white/20 text-white border border-white/40 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform">৳ ব্যালেন্স দেখুন</button>
             </div>
         </div>
         <div class="p-4 space-y-4 pb-8">
-            <div class="bg-gradient-to-r from-orange-400 to-red-500 rounded-xl px-4 py-2 flex justify-between items-center text-white shadow-sm cursor-pointer" onclick="toggleNoticeModal(true)">
-                <div class="flex items-center gap-2 font-black text-sm">
-                    <i class="fa-solid fa-bullhorn"></i> জরুরী নোটিশ 
-                </div>
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-            </div>
+            
             
             <div class="relative w-full rounded-2xl overflow-hidden shadow-md bg-slate-200 aspect-[16/7]">
                 <div id="banner-slider" class="flex w-full h-full transition-transform duration-500 ease-in-out"></div>
