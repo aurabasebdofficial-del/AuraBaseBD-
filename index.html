@@ -2466,9 +2466,8 @@
 
     function renderOrders(){
         const o = getDB(DB_O).filter(x => x.rPh === localStorage.getItem(DB_S));
-        getEl('orders-list').innerHTML = o.length ? o.map(x => `<div class="bg-white p-4 rounded shadow-sm border border-slate-200 flex justify-between cursor-pointer hover:shadow-md active:scale-[0.98] transition-transform" onclick="currentActiveOrderForInvoice='${x.id}'; renderInvoice('${x.id}'); openSubView('invoice');"><div><h3 class="font-black text-sm text-primary">#${x.id} <span class="text-blue-600 text-[10px] font-bold">(রিসেলার: ${(getDB(DB_U)||[]).find(u=>u.phone===x.rPh)?.name || 'Unknown'})</span></h3><p class="text-[10px] font-bold text-gray-500">${x.dt} - ${x.cNm} (রিসেলার: ${(getDB(DB_U)||[]).find(u=>u.phone===x.rPh)?.name || 'Unknown'})/p></div><div class="text-right"><div class="font-black text-red-600 mb-1">COD ৳${x.cod.toLocaleString('en-IN')}</div>${getAdminStatusBadge(x.st)}</div></div>`).join('') : '<p class="text-center mt-10 text-sm font-bold text-gray-400">কোনো অর্ডার নেই</p>';
-    }
-
+        getEl('orders-list').innerHTML = o.length ? o.map(x => `<div class="bg-white p-4 rounded shadow-sm border border-slate-200 flex justify-between cursor-pointer hover:shadow-md active:scale-[0.98] transition-transform" onclick="currentActiveOrderForInvoice='${x.id}'; renderInvoice('${x.id}'); openSubView('invoice');"><div><h3 class="font-black text-sm text-primary">#${x.id} (${(getDB(DB_U)||[]).find(u=>u.phone===x.rPh)?.name || 'Unknown'})</h3><p class="text-[10px] font-bold text-gray-500">${x.dt} - ${x.cNm}</p></div><div class="text-right"><div class="font-black text-red-600 mb-1">COD ৳${x.cod.toLocaleString('en-IN')}</div>${getAdminStatusBadge(x.st)}</div></div>`).join('') : '<p class="text-center mt-10 text-sm font-bold text-gray-400">কোনো অর্ডার নেই</p>';
+    }    
     function accessVendorZone(){
         const u = getDB(DB_U).find(x => x.phone === localStorage.getItem(DB_S)); if(!u) return;
         if(u.vSt === 'Appr') { nav('view-vendor-dash'); } else if(u.vSt === 'pen') { showToast("আপনার ভেন্ডর রিকোয়েস্টটি পেন্ডিং আছে। এডমিন এপ্রুভ করলে আপনি ড্যাশবোর্ড ব্যবহার করতে পারবেন।"); } else { nav('view-vendor-reg'); }
