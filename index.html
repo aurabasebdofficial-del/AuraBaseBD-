@@ -52,6 +52,91 @@
         .ad-navitem i { width: 18px; text-align: center; }
         @media (max-width: 768px) { #admin-sidebar { position: fixed; z-index: 40; transform: translateX(-100%); transition: transform .25s; } #admin-sidebar.ad-open { transform: translateX(0); } }
     
+        /* ========================= UI VISUAL POLISH (Feature 5) ========================= */
+        /* Premium button feel */
+        button { -webkit-tap-highlight-color: transparent; }
+        .gradient-bg { background: linear-gradient(135deg, #38bdf8 0%, #0284c7 60%, #0369a1 100%); }
+
+        /* Polished nav bottom bar */
+        #bottom-nav { border-top: 1px solid #e2e8f0; box-shadow: 0 -4px 24px rgba(14,165,233,.08); }
+        .nav-btn { border-radius: 12px; transition: color .15s, background .15s; }
+        .nav-btn:active { background: #e0f2fe; }
+        .nav-active { color: #0ea5e9 !important; }
+        .nav-active i { transform: scale(1.2); }
+
+        /* Premium card style */
+        .premium-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(14,165,233,.07), 0 1px 3px rgba(0,0,0,.04);
+            border: 1px solid #e0f2fe;
+            transition: box-shadow .2s, transform .15s;
+        }
+        .premium-card:active { transform: scale(0.985); box-shadow: 0 1px 6px rgba(14,165,233,.1); }
+
+        /* Polished section headers */
+        .section-header {
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #1e293b;
+            letter-spacing: -0.01em;
+        }
+
+        /* Smooth toast */
+        @keyframes toastIn  { from { opacity:0; transform: translate(-50%,-12px) scale(.95); } to { opacity:1; transform: translate(-50%,0) scale(1); } }
+        @keyframes toastOut { from { opacity:1; } to { opacity:0; transform: translate(-50%,-8px); } }
+
+        /* Polished input focus ring */
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(14,165,233,.18);
+            border-color: #0ea5e9;
+        }
+
+        /* Polished scrollbar for desktop */
+        @media (min-width: 640px) {
+            ::-webkit-scrollbar { display: block; width: 4px; height: 4px; }
+            ::-webkit-scrollbar-track { background: transparent; }
+            ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+            ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        }
+
+        /* Notification center panel polish */
+        #notif-center-panel { border-left: 1px solid #e2e8f0; }
+        #notif-center-body::-webkit-scrollbar { display: none; }
+
+        /* Admin sidebar polish */
+        .ad-navitem { border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
+        .ad-navitem.ad-active { box-shadow: 0 4px 14px rgba(14,165,233,.3); }
+
+        /* Polished stat cards */
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #bae6fd;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+        }
+        .stat-card .stat-val { font-size: 1.25rem; font-weight: 900; color: #0369a1; }
+        .stat-card .stat-lbl { font-size: 0.65rem; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; }
+
+        /* Polished badge */
+        .badge-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 99px;
+            font-size: 0.65rem; font-weight: 900;
+        }
+
+        /* Smooth page transitions */
+        section.active-view { animation: fadeIn .18s ease-out forwards; }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+
+        /* Polished product cards */
+        .product-card-img { transition: transform .3s ease; }
+        .product-card-img:hover { transform: scale(1.04); }
+
+        /* ========================= END UI POLISH ========================= */
+
         /* ── Product Image Gallery Thumbnails ── */
         .pd-gallery-row {
             display: flex;
@@ -93,6 +178,38 @@
 </head>
 <body class="text-gray-800 antialiased selection:bg-primary selection:text-white">
 <div id="app-wrapper" class="app-container mobile-width pb-20">
+
+    <!-- ===== NOTIFICATION CENTER PANEL (Feature 3) ===== -->
+    <div id="notif-center-overlay" onclick="closeNotificationCenter()"
+        class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300"></div>
+    <div id="notif-center-panel"
+        class="fixed top-0 right-0 bottom-0 z-[61] w-full max-w-[360px] bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+        <!-- Header -->
+        <div class="gradient-bg px-5 py-4 flex items-center justify-between shadow-md flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bell text-white text-lg"></i>
+                <div>
+                    <h2 class="text-white font-black text-base leading-tight">নোটিফিকেশন</h2>
+                    <p class="text-sky-100 text-[10px] font-bold">Notification Center</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="markAllNotifsRead()" class="text-sky-100 hover:text-white text-[11px] font-black px-2 py-1 rounded-lg hover:bg-white/10 transition-colors">সব পড়া</button>
+                <button onclick="closeNotificationCenter()" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/20 rounded-lg transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Filter tabs -->
+        <div class="flex border-b border-slate-100 bg-slate-50 flex-shrink-0">
+            <button id="nc-tab-all" onclick="setNotifTab('all')"
+                class="flex-1 py-2.5 text-[11px] font-black text-primary border-b-2 border-primary">সব</button>
+            <button id="nc-tab-unread" onclick="setNotifTab('unread')"
+                class="flex-1 py-2.5 text-[11px] font-black text-gray-400 border-b-2 border-transparent">অপঠিত</button>
+        </div>
+        <!-- Body -->
+        <div id="notif-center-body" class="flex-1 overflow-y-auto hide-scrollbar p-3 space-y-2"></div>
+    </div>
 
     <!-- Modals -->
     <div id="sidebar-container" class="fixed inset-0 z-50 hidden transition-opacity duration-300 opacity-0">
@@ -230,6 +347,13 @@
                         <input type="password" id="reg-pass" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl pl-11 pr-4 py-3.5 font-bold focus:border-primary outline-none">
                     </div>
                 </div>
+                <div>
+                    <label class="block text-xs font-black text-gray-500 mb-1.5 ml-1">রেফারেল কোড (Affiliate ID) <span class="text-gray-300 font-bold">— ঐচ্ছিক</span></label>
+                    <div class="relative">
+                        <i class="fa-solid fa-gift absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="reg-ref" inputmode="numeric" placeholder="যদি কেউ রেফার করে থাকেন" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl pl-11 pr-4 py-3.5 font-bold focus:border-primary outline-none">
+                    </div>
+                </div>
                 <button onclick="processRegister()" class="w-full bg-slate-800 text-white font-black py-4 rounded-2xl shadow-lg mt-2 active:scale-95 text-lg transition-transform">রেজিস্ট্রেশন করুন</button>
             </div>
         </div>
@@ -248,10 +372,20 @@
                     </div>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                
-                
-                <button id="balance-display" onclick="toggleBalance()" class="bg-white/20 text-white border border-white/40 px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 transition-transform">৳ ব্যালেন্স দেখুন</button>
+            <div class="flex items-center gap-2.5">
+                <!-- Balance Display (Feature 2: premium visual) -->
+                <button id="balance-display" onclick="toggleBalance()"
+                    class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white border border-white/30 px-3 py-1.5 rounded-xl text-xs font-black active:scale-95 transition-all shadow-inner backdrop-blur-sm">
+                    <i class="fa-solid fa-wallet text-sky-200 text-[11px]"></i>
+                    <span id="balance-display-text">৳ ব্যালেন্স</span>
+                </button>
+                <!-- Feature 1: Notification Bell (replaces profile icon) -->
+                <button id="notif-bell-btn" onclick="openNotificationCenter()"
+                    class="relative w-9 h-9 flex items-center justify-center bg-white/15 hover:bg-white/25 text-white rounded-xl border border-white/30 active:scale-95 transition-all shadow-inner">
+                    <i class="fa-solid fa-bell text-base"></i>
+                    <span id="notif-bell-badge" style="display:none;"
+                        class="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center leading-none border-2 border-white shadow-sm"></span>
+                </button>
             </div>
         </div>
         <div class="p-4 space-y-4 pb-8">
@@ -725,7 +859,20 @@
                     <div><label class="block text-xs font-black text-gray-500 mb-1.5">Full Name *</label><input type="text" id="prof-name" class="w-full border-2 border-slate-200 rounded px-4 py-3 font-bold focus:border-primary outline-none"></div>
                     <div><label class="block text-xs font-black text-gray-500 mb-1.5">Mobile (Read Only)</label><input type="text" id="prof-phone" readonly class="w-full bg-slate-100 border-2 border-slate-200 rounded px-4 py-3 font-black text-gray-500"></div>
                     <div><label class="block text-xs font-black text-gray-500 mb-1.5">Email</label><input type="email" id="prof-email" class="w-full border-2 border-slate-200 rounded px-4 py-3 font-bold focus:border-primary outline-none"></div>
-                    <div><label class="block text-xs font-black text-gray-500 mb-1.5">Profile Picture URL</label><input type="url" id="prof-img" class="w-full border-2 border-slate-200 rounded px-4 py-3 font-bold focus:border-primary outline-none"></div>
+                    <div>
+                        <label class="block text-xs font-black text-gray-500 mb-1.5">Profile Picture</label>
+                        <div class="flex items-center gap-3">
+                            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-100 flex items-center justify-center flex-shrink-0">
+                                <img id="prof-img-preview-upload" src="" class="w-full h-full object-cover hidden" alt="Preview">
+                                <i id="prof-img-placeholder" class="fa-solid fa-user text-2xl text-slate-300"></i>
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="prof-img-file" accept="image/*" class="w-full border-2 border-slate-200 rounded px-3 py-2.5 font-bold focus:border-primary outline-none text-sm bg-white" onchange="handleProfilePicUpload(this)">
+                                <p class="text-[10px] text-gray-400 mt-1">ডিভাইস/গ্যালারি থেকে ছবি বেছে নিন</p>
+                            </div>
+                        </div>
+                        <input type="hidden" id="prof-img" value="">
+                    </div>
                     <button onclick="saveProfile()" class="w-full gradient-bg text-white font-black py-4 rounded shadow-md text-lg active:scale-95 transition-transform">তথ্য আপডেট করুন</button>
                 </div>
             </div>
@@ -816,6 +963,49 @@
             <p class="text-center text-gray-400 text-sm py-8">লোড হচ্ছে...</p>
         </div>
     </section>
+
+    <!-- Refer & Earn (v13) -->
+    <section id="view-referral" class="bg-slate-50 min-h-screen pb-20">
+        <div class="px-4 py-3 bg-white shadow-sm flex justify-between items-center sticky top-0 z-10">
+            <div class="flex items-center gap-3">
+                <button onclick="nav('view-dashboard')" class="text-xl text-gray-600"><i class="fa-solid fa-arrow-left"></i></button>
+                <h1 class="text-lg font-black text-dark"><i class="fa-solid fa-gift text-primary mr-1"></i> Refer & Earn</h1>
+            </div>
+        </div>
+        <div id="referral-body" class="p-4 space-y-4">
+            <p class="text-center text-gray-400 text-sm py-8">লোড হচ্ছে...</p>
+        </div>
+    </section>
+
+    <!-- Referral Transfer Modal (v13) -->
+    <div id="referral-transfer-modal" class="fixed inset-0 bg-black/60 z-[200] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+            <div class="gradient-bg text-white px-5 py-4 flex justify-between items-center">
+                <h3 class="font-black text-base"><i class="fa-solid fa-money-bill-transfer mr-2"></i>ব্যালেন্স ট্রান্সফার</h3>
+                <button onclick="closeReferralTransferModal()" class="text-white/80 hover:text-white text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 text-center">
+                    <p class="text-xs font-bold text-purple-500">রেফারেল ব্যালেন্স</p>
+                    <p id="rt-avail-bal" class="text-2xl font-black text-purple-700">৳ 0</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-black text-gray-500 mb-1.5 ml-1">ট্রান্সফার পরিমাণ (৳)</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-coins absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="number" id="rt-amount" min="0" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl pl-11 pr-4 py-3 font-bold focus:border-primary outline-none">
+                    </div>
+                    <p id="rt-min-info" class="text-[11px] font-bold text-gray-400 mt-1.5 ml-1"></p>
+                </div>
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-[11px] font-bold text-gray-500 leading-relaxed">
+                    <i class="fa-solid fa-circle-info text-primary mr-1"></i> রেফারেল ব্যালেন্স থেকে টাকা আপনার মেইন ব্যালেন্সে ট্রান্সফার হবে। মেইন ব্যালেন্স থেকে আপনি উইথড্র করতে পারবেন।
+                </div>
+                <button onclick="submitReferralTransfer()" class="w-full gradient-bg text-white font-black py-3 rounded-xl shadow active:scale-95 transition-transform text-sm">
+                    <i class="fa-solid fa-arrow-right-arrow-left mr-1"></i> ট্রান্সফার করুন
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- ========================= FAVORITES VIEW (v8) ========================= -->
     <section id="view-favorites" class="bg-slate-50 min-h-screen pb-20">
@@ -941,6 +1131,8 @@
                     <div data-admin-panel="messages" class="admin-panel hidden"><div id="ad-mod-messages"></div></div>
                     <div data-admin-panel="support" class="admin-panel hidden"><div id="ad-mod-support"></div></div>
                     <div data-admin-panel="balance-requests" class="admin-panel hidden"><div id="ad-mod-balance-requests"></div></div>
+                    <div data-admin-panel="referral" class="admin-panel hidden"><div id="ad-mod-referral"></div></div>
+                    <div data-admin-panel="fcm" class="admin-panel hidden"><div id="ad-mod-fcm"></div></div>
 
                 </div>
             </div>
@@ -1332,7 +1524,11 @@
                         dt: r.date_str || '',
                         ts: r.timestamp || 0,
                         deliveryCharge: Number(r.delivery_charge || 0),
-                        advanceTaken: Number(r.advance_taken || 0)
+                        advanceTaken: Number(r.advance_taken || 0),
+                        // ===== REFERRAL SYSTEM (v13) =====
+                        profitCredited: r.profit_credited || false,
+                        commissionCredited: r.commission_credited || false,
+                        rAff: r.reseller_affiliate_code || ''
                     };
                 });
             }
@@ -1367,7 +1563,11 @@
                 profit: Number(o.pr || 0),
                 items: o.items || [],
                 timeline: o.tl || [],
-                notes: o.notes || []
+                notes: o.notes || [],
+                // ===== REFERRAL SYSTEM (v13) =====
+                profit_credited: o.profitCredited || false,
+                commission_credited: o.commissionCredited || false,
+                reseller_affiliate_code: o.rAff || null
             }));
                     const res = await supabaseRequest('orders?on_conflict=id', {
             method: 'POST',
@@ -1446,7 +1646,14 @@
                     refId: r.ref_id || '',
                     bal: Number(r.balance || 0),
                     vBal: 0,
-                    role: r.role || 'customer'
+                    role: r.role || 'customer',
+                    // ===== REFERRAL SYSTEM (v13) =====
+                    referredBy: r.referred_by || '',            // Affiliate ID of the referrer
+                    refBalance: Number(r.ref_balance || 0),      // separate referral wallet
+                    referralCount: Number(r.referral_count || 0),// total people this user referred
+                    refTransferred: Number(r.ref_transferred || 0), // lifetime transferred ref->main
+                    referralDisabled: r.referral_disabled || false,  // admin can disable a user's referral
+                    downline: (function(){ try { return Array.isArray(r.downline) ? r.downline : JSON.parse(r.downline||'[]'); } catch(e){ return []; } })()
                 }));
                 // Restore vBal from localStorage (no DB column)
                 try {
@@ -1476,7 +1683,14 @@
                 trx_id: u.trx || '',
                 ref_id: u.refId || '',
                 balance: Number(u.bal || 0),
-                role: u.role || 'customer'
+                role: u.role || 'customer',
+                // ===== REFERRAL SYSTEM (v13) =====
+                referred_by: u.referredBy || '',
+                ref_balance: Number(u.refBalance || 0),
+                referral_count: Number(u.referralCount || 0),
+                ref_transferred: Number(u.refTransferred || 0),
+                referral_disabled: u.referralDisabled || false,
+                downline: JSON.stringify(Array.isArray(u.downline) ? u.downline : [])
             }));
             await supabaseRequest('users?on_conflict=phone', {
                 method: 'POST',
@@ -1500,7 +1714,14 @@
                 trx_id: u.trx || '',
                 ref_id: u.refId || '',
                 balance: Number(u.bal || 0),
-                role: u.role || 'customer'
+                role: u.role || 'customer',
+                // ===== REFERRAL SYSTEM (v13) =====
+                referred_by: u.referredBy || '',
+                ref_balance: Number(u.refBalance || 0),
+                referral_count: Number(u.referralCount || 0),
+                ref_transferred: Number(u.refTransferred || 0),
+                referral_disabled: u.referralDisabled || false,
+                downline: JSON.stringify(Array.isArray(u.downline) ? u.downline : [])
             };
             await supabaseRequest('users?on_conflict=phone', {
                 method: 'POST',
@@ -1516,6 +1737,330 @@
                 localStorage.setItem(DB_U, JSON.stringify(localUsers));
             } catch(e){}
         } catch(err) { console.error('upsertSingleUser failed:', err); }
+    }
+
+    // ============================================================
+    // ============================================================
+    // REFERRAL & EARN SYSTEM (v13)  — Supabase is single source of truth
+    // ============================================================
+    // Tables: referral_transactions, referral_settings
+    // Uses existing Affiliate ID (user.refId) as the referral code — no separate codes.
+    // ============================================================
+    const REF_TXN_TABLE = 'referral_transactions';
+    const REF_SETTINGS_TABLE = 'referral_settings';
+
+    // Default settings (used until admin saves overrides / if table empty).
+    const REFERRAL_DEFAULTS = {
+        signup_bonus: 5,              // ৳ credited to referrer on a valid referred signup (existing)
+        referrer_signup_bonus: 3,     // ৳ ADDITIONAL bonus to referrer per successful referred registration
+        commission_percent: 3,        // % of seller profit
+        max_commission_orders: 5,     // commission only on first N delivered orders per referred user
+        min_transfer: 50,             // ৳ minimum referral→main transfer
+        system_enabled: true,         // master ON/OFF
+        leaderboard_enabled: true     // leaderboard ON/OFF
+    };
+    window._referralTxns = window._referralTxns || [];
+    window._referralSettings = null;
+
+    // ---- referral_settings (single row, id=1) ----
+    async function loadReferralSettings(){
+        try {
+            const rows = await supabaseRequest(REF_SETTINGS_TABLE + '?select=*&limit=1');
+            if(Array.isArray(rows) && rows.length){
+                const r = rows[0];
+                window._referralSettings = {
+                    signup_bonus: Number(r.signup_bonus ?? REFERRAL_DEFAULTS.signup_bonus),
+                    referrer_signup_bonus: Number(r.referrer_signup_bonus ?? REFERRAL_DEFAULTS.referrer_signup_bonus),
+                    commission_percent: Number(r.commission_percent ?? REFERRAL_DEFAULTS.commission_percent),
+                    max_commission_orders: Number(r.max_commission_orders ?? REFERRAL_DEFAULTS.max_commission_orders),
+                    min_transfer: Number(r.min_transfer ?? REFERRAL_DEFAULTS.min_transfer),
+                    system_enabled: r.system_enabled !== false,
+                    leaderboard_enabled: r.leaderboard_enabled !== false
+                };
+            } else {
+                window._referralSettings = {...REFERRAL_DEFAULTS};
+            }
+        } catch(err){
+            console.warn('Referral settings load failed, using defaults:', err);
+            window._referralSettings = {...REFERRAL_DEFAULTS};
+        }
+    }
+    function getReferralSettings(){ return window._referralSettings || {...REFERRAL_DEFAULTS}; }
+
+    async function saveReferralSettings(s){
+        // Persist to Supabase (single row id=1). Supabase is the source of truth.
+        window._referralSettings = {...getReferralSettings(), ...s};
+        try {
+            await supabaseRequest(REF_SETTINGS_TABLE + '?on_conflict=id', {
+                method: 'POST',
+                prefer: 'resolution=merge-duplicates',
+                body: JSON.stringify([{ id: 1, ...window._referralSettings }])
+            });
+        } catch(err){ console.error('saveReferralSettings failed:', err); }
+    }
+
+    // ---- referral_transactions ----
+    async function loadReferralTxns(){
+        try {
+            const rows = await supabaseRequest(REF_TXN_TABLE + '?select=*&order=created_at.desc');
+            if(Array.isArray(rows)){
+                window._referralTxns = rows.map(r => ({
+                    id: r.txn_id || r.id,
+                    beneficiary: r.beneficiary_phone || '',   // who RECEIVES the money (the referrer)
+                    fromUser: r.from_phone || '',             // the referred user (source of the event)
+                    fromName: r.from_name || '',
+                    type: r.type || '',                       // 'signup' | 'commission' | 'transfer'
+                    orderId: r.order_id || '',
+                    amount: Number(r.amount || 0),
+                    status: r.status || 'Completed',
+                    dt: r.dt || '',
+                    ts: Number(r.ts || 0),
+                    createdAt: r.created_at || ''
+                }));
+            }
+        } catch(err){
+            console.warn('Referral txns load failed:', err);
+            if(!Array.isArray(window._referralTxns)) window._referralTxns = [];
+        }
+    }
+
+    async function saveReferralTxn(txn){
+        // Append one transaction to memory + Supabase (permanent store).
+        window._referralTxns.unshift(txn);
+        try {
+            await supabaseRequest(REF_TXN_TABLE, {
+                method: 'POST',
+                prefer: 'return=minimal',
+                body: JSON.stringify({
+                    txn_id: txn.id,
+                    beneficiary_phone: txn.beneficiary || '',
+                    from_phone: txn.fromUser || '',
+                    from_name: txn.fromName || '',
+                    type: txn.type || '',
+                    order_id: txn.orderId || '',
+                    amount: Number(txn.amount || 0),
+                    status: txn.status || 'Completed',
+                    dt: txn.dt || '',
+                    ts: Number(txn.ts || 0),
+                    created_at: new Date().toISOString()
+                })
+            });
+        } catch(err){ console.error('saveReferralTxn failed:', err); }
+    }
+
+    function makeRefTxn(beneficiaryPhone, fromUser, type, amount, orderId){
+        const now = new Date();
+        const fromU = (getDB(DB_U) || []).find(x => x.phone === fromUser);
+        return {
+            id: 'RT' + now.getTime() + Math.floor(Math.random()*1000),
+            beneficiary: beneficiaryPhone,
+            fromUser: fromUser || '',
+            fromName: fromU ? (fromU.name || '') : '',
+            type: type,
+            orderId: orderId || '',
+            amount: Number(amount || 0),
+            status: 'Completed',
+            dt: now.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}) + ' - ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),
+            ts: now.getTime()
+        };
+    }
+
+    // ---- Inbox notification helper (reuses existing DB_MSG message system) ----
+    function addReferralNotification(phone, text){
+        if(!phone) return;
+        const now = new Date();
+        const msgs = getDB(DB_MSG) || [];
+        msgs.unshift({
+            id: 'RN' + now.getTime() + Math.floor(Math.random()*1000),
+            to: phone,
+            type: 'custom',
+            text: text,
+            orderId: '',
+            link: '',
+            dt: now.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}) + ' ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})
+        });
+        setDB(DB_MSG, msgs);
+    }
+
+    // ---- Validate an Affiliate ID used as a referral code at registration ----
+    // Returns the referrer user object, or null if invalid.
+    // SECURITY: caller must separately guard against self-referral (own refId).
+    function validateAffiliateId(code, ownPhone){
+        if(!code) return null;
+        const c = String(code).trim();
+        if(!c) return null;
+        const users = getDB(DB_U) || [];
+        const ref = users.find(x => String(x.refId) === c);
+        if(!ref) return null;
+        if(ownPhone && ref.phone === ownPhone) return null; // cannot refer self
+        if(ref.referralDisabled) return null;                // admin disabled this referrer
+        return ref;
+    }
+
+    // ---- Credit signup bonus to a referrer (platform fund, not deducted from anyone) ----
+    // referrerPhone: the phone of the user who owns the used Affiliate ID
+    // newUser: {phone, name, refId}
+    function creditSignupBonus(referrerPhone, newUser){
+        const st = getReferralSettings();
+        if(!st.system_enabled) return;
+        const bonus = Number(st.signup_bonus || 0);
+        let users = getDB(DB_U) || [];
+        const ri = users.findIndex(x => x.phone === referrerPhone);
+        if(ri < 0) return;
+        // refBalance += bonus  (separate referral wallet — NOT main balance)
+        users[ri].refBalance = Number(users[ri].refBalance || 0) + bonus;
+        users[ri].referralCount = Number(users[ri].referralCount || 0) + 1;
+        // downline update
+        if(!Array.isArray(users[ri].downline)) users[ri].downline = [];
+        if(!users[ri].downline.some(d => d.phone === newUser.phone)){
+            users[ri].downline.push({
+                phone: newUser.phone,
+                name: newUser.name || '',
+                refId: newUser.refId || '',
+                joinedAt: new Date().toISOString(),
+                joinDt: new Date().toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'})
+            });
+        }
+        setDB(DB_U, users);
+        // transaction log — existing ৳5 signup bonus
+        if(bonus > 0){
+            saveReferralTxn(makeRefTxn(referrerPhone, newUser.phone, 'signup', bonus, ''));
+            // inbox notification
+            addReferralNotification(referrerPhone, `🎉 রেফারেল সাইনআপ বোনাস! ${newUser.name||'একজন নতুন ইউজার'} আপনার Affiliate ID দিয়ে রেজিস্ট্রেশন করেছেন। আপনার রেফারেল ব্যালেন্সে ৳${bonus} যোগ হয়েছে।`);
+        }
+        // ===== ADDITIONAL referrer signup bonus (৳3 by default, admin-configurable) =====
+        const referrerBonus = Number(st.referrer_signup_bonus || 0);
+        if(referrerBonus > 0){
+            users[ri].refBalance = Number(users[ri].refBalance || 0) + referrerBonus;
+            setDB(DB_U, users);
+            saveReferralTxn(makeRefTxn(referrerPhone, newUser.phone, 'referrer_signup_bonus', referrerBonus, ''));
+            addReferralNotification(referrerPhone, `🎁 রেফারার সাইনআপ বোনাস! ${newUser.name||'একজন নতুন ইউজার'} আপনার Affiliate ID ব্যবহার করে সফলভাবে রেজিস্ট্রেশন করেছেন। অতিরিক্ত ৳${referrerBonus} রেফারার সাইনআপ বোনাস আপনার রেফারেল ব্যালেন্সে যোগ হয়েছে।`);
+        }
+    }
+
+    // ---- Credit order commission to a referrer when a referred user's order is Delivered ----
+    // Rules: 3% of seller profit, first N (max_commission_orders) delivered orders per referred
+    // user only, no commission on Cancelled/Refunded/Pending/Processing, no duplicate per order.
+    // Mutates the passed order object (sets commissionCredited=true) — caller persists the order.
+    function creditOrderCommission(order){
+        const st = getReferralSettings();
+        if(!st.system_enabled) return false;
+        if(!order || order.commissionCredited) return false;          // no duplicate on same order
+        if(order.st !== 'Delivered') return false;                     // only delivered
+        const resellerPhone = order.rPh;
+        if(!resellerPhone) return false;
+        const users = getDB(DB_U) || [];
+        const reseller = users.find(x => x.phone === resellerPhone);
+        if(!reseller || !reseller.referredBy) return false;            // reseller was not referred
+        const referrer = users.find(x => String(x.refId) === String(reseller.referredBy));
+        if(!referrer) return false;
+        if(referrer.phone === resellerPhone) return false;             // safety: never self
+        if(referrer.referralDisabled) return false;
+        // Count how many of this reseller's orders already earned commission (first N only).
+        const orders = getDB(DB_O) || [];
+        const alreadyCommissioned = orders.filter(o => o.rPh === resellerPhone && o.commissionCredited && o.id !== order.id).length;
+        if(alreadyCommissioned >= Number(st.max_commission_orders || 0)) {
+            order.commissionCredited = true; // mark so we never re-evaluate this order
+            return false;
+        }
+        const profit = Number(order.pr || 0);
+        if(profit <= 0){ order.commissionCredited = true; return false; }
+        const commission = Math.round(profit * Number(st.commission_percent || 0) / 100);
+        if(commission <= 0){ order.commissionCredited = true; return false; }
+        // Credit to referrer's REFERRAL wallet (separate from main balance).
+        let uList = getDB(DB_U) || [];
+        const ri = uList.findIndex(x => x.phone === referrer.phone);
+        if(ri < 0) return false;
+        uList[ri].refBalance = Number(uList[ri].refBalance || 0) + commission;
+        setDB(DB_U, uList);
+        order.commissionCredited = true;                               // prevent double credit
+        saveReferralTxn(makeRefTxn(referrer.phone, resellerPhone, 'commission', commission, order.id));
+        addReferralNotification(referrer.phone, `💰 রেফারেল কমিশন! ${reseller.name||'আপনার রেফার করা ইউজার'}-এর একটি অর্ডার ডেলিভার হয়েছে। প্রফিটের ${st.commission_percent}% = ৳${commission} আপনার রেফারেল ব্যালেন্সে যোগ হয়েছে।`);
+        return true;
+    }
+
+    // ---- Transfer money from Referral wallet -> Main balance ----
+    function transferReferralToMain(amount){
+        const st = getReferralSettings();
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN'){ showToast('লগইন করুন।'); return false; }
+        const amt = Number(amount);
+        if(!amt || isNaN(amt) || amt <= 0){ showToast('সঠিক পরিমাণ দিন।'); return false; }
+        const minT = Number(st.min_transfer || 0);
+        if(amt < minT){ showToast('সর্বনিম্ন ট্রান্সফার ৳' + minT + '।'); return false; }
+        let users = getDB(DB_U) || [];
+        const ui = users.findIndex(x => x.phone === ph);
+        if(ui < 0) return false;
+        const refBal = Number(users[ui].refBalance || 0);
+        if(amt > refBal){ showToast('অপর্যাপ্ত রেফারেল ব্যালেন্স।'); return false; }
+        // Move refBalance -> main balance (bal). Both persisted to Supabase via setDB.
+        users[ui].refBalance = refBal - amt;
+        users[ui].bal = Number(users[ui].bal || 0) + amt;
+        users[ui].refTransferred = Number(users[ui].refTransferred || 0) + amt;
+        setDB(DB_U, users);
+        saveReferralTxn(makeRefTxn(ph, ph, 'transfer', amt, ''));
+        addReferralNotification(ph, `✅ ট্রান্সফার সফল! ৳${amt} রেফারেল ব্যালেন্স থেকে মেইন ব্যালেন্সে ট্রান্সফার হয়েছে।`);
+        showToast('ট্রান্সফার সফল! ৳' + amt + ' মেইন ব্যালেন্সে যোগ হয়েছে।');
+        return true;
+    }
+
+    // ---- Aggregate referral stats for a given user ----
+    function getReferralStats(phone){
+        const ph = phone || localStorage.getItem(DB_S);
+        const users = getDB(DB_U) || [];
+        const u = users.find(x => x.phone === ph) || {};
+        const myRefId = String(u.refId || '');
+        const txns = window._referralTxns || [];
+        const myTxns = txns.filter(t => t.beneficiary === ph);
+        const signupIncome = myTxns.filter(t => t.type === 'signup').reduce((s,t) => s + Number(t.amount||0), 0);
+        const commissionIncome = myTxns.filter(t => t.type === 'commission').reduce((s,t) => s + Number(t.amount||0), 0);
+        const totalTransferred = Number(u.refTransferred || 0);
+        // People this user referred (downline) — prefer stored downline, fall back to referredBy scan
+        let referred = Array.isArray(u.downline) ? u.downline.slice() : [];
+        if(!referred.length && myRefId){
+            referred = users.filter(x => String(x.referredBy) === myRefId).map(x => ({
+                phone: x.phone, name: x.name || '', refId: x.refId || '', joinDt: ''
+            }));
+        }
+        const totalReferral = referred.length;
+        // Active referral = referred users who have at least one Delivered order
+        const orders = getDB(DB_O) || [];
+        const activeReferral = referred.filter(d => orders.some(o => o.rPh === d.phone && o.st === 'Delivered')).length;
+        return {
+            user: u,
+            refId: myRefId,
+            totalReferral,
+            activeReferral,
+            signupIncome,
+            commissionIncome,
+            totalCommission: signupIncome + commissionIncome,
+            refBalance: Number(u.refBalance || 0),
+            totalTransferred,
+            referred,
+            myTxns
+        };
+    }
+
+    // ---- Mask an Affiliate ID for public leaderboard (e.g. 12345678 -> 12****78) ----
+    function maskAffiliateId(id){
+        const s = String(id || '');
+        if(s.length <= 4) return s;
+        return s.slice(0,2) + '****' + s.slice(-2);
+    }
+
+    // ---- Leaderboard: top referrers by total commission (signup+commission income) ----
+    function getReferralLeaderboard(limit){
+        const users = getDB(DB_U) || [];
+        const txns = window._referralTxns || [];
+        const rows = users.filter(u => u.refId).map(u => {
+            const my = txns.filter(t => t.beneficiary === u.phone && (t.type === 'signup' || t.type === 'commission'));
+            const totalCommission = my.reduce((s,t) => s + Number(t.amount||0), 0);
+            const totalReferral = Array.isArray(u.downline) ? u.downline.length
+                : users.filter(x => String(x.referredBy) === String(u.refId)).length;
+            return { name: u.name || 'User', refId: u.refId, totalReferral, totalCommission };
+        }).filter(r => r.totalReferral > 0 || r.totalCommission > 0);
+        rows.sort((a,b) => b.totalCommission - a.totalCommission || b.totalReferral - a.totalReferral);
+        return rows.slice(0, limit || 10);
     }
 
     // ============================================================
@@ -1666,6 +2211,7 @@
         window._users = [];
         window._withdrawals = [];
         window._messages = [];
+        window._paymentConfig = null;
         try {
             await Promise.all([
                 loadProductsFromSupabase(),
@@ -1673,7 +2219,10 @@
                 loadUsersFromSupabase(),
                 loadWithdrawalsFromSupabase(),
                 loadMessagesFromSupabase(),
-                loadDashOffsets()
+                loadDashOffsets(),
+                loadPaymentConfigFromSupabase(),
+                loadReferralSettings(),
+                loadReferralTxns()
             ]);
         } catch(e) { console.error('Initial load error:', e); }
         checkSession();
@@ -1703,23 +2252,61 @@
 
     // ========================= PAYMENT CONFIG =========================
     function getPaymentConfig(){
-        try {
-            const cfg = JSON.parse(localStorage.getItem(DB_PAY_CFG) || '{}');
-            return {
-                bkash: cfg.bkash || '',
-                nagad: cfg.nagad || '',
-                rocket: cfg.rocket || '',
-                bankInfo: cfg.bankInfo || '',
-                qrCode: cfg.qrCode || '',
-                activeMethod: cfg.activeMethod || 'bKash'
-            };
-        } catch(e) {
-            return { bkash:'', nagad:'', rocket:'', bankInfo:'', qrCode:'', activeMethod:'bKash' };
-        }
+        // Use Supabase-loaded cache if available, fallback to localStorage
+        const src = window._paymentConfig || (() => { try { return JSON.parse(localStorage.getItem(DB_PAY_CFG) || '{}'); } catch(e){ return {}; } })();
+        return {
+            bkash: src.bkash || '',
+            nagad: src.nagad || '',
+            rocket: src.rocket || '',
+            bankInfo: src.bankInfo || '',
+            qrCode: src.qrCode || '',
+            activeMethod: src.activeMethod || 'bKash'
+        };
     }
 
     function savePaymentConfig(cfg){
+        // Save to both localStorage (fast) and Supabase (persistent across devices)
         localStorage.setItem(DB_PAY_CFG, JSON.stringify(cfg));
+        window._paymentConfig = cfg;
+        // Async save to Supabase site_settings
+        (async () => {
+            try {
+                const existing = await supabaseRequest('site_settings?key=eq.payment_config&select=key&limit=1');
+                if(Array.isArray(existing) && existing.length > 0) {
+                    await supabaseRequest('site_settings?key=eq.payment_config', {
+                        method: 'PATCH',
+                        body: JSON.stringify({ value: JSON.stringify(cfg) }),
+                        prefer: 'return=minimal'
+                    });
+                } else {
+                    await supabaseRequest('site_settings', {
+                        method: 'POST',
+                        body: JSON.stringify({ key: 'payment_config', value: JSON.stringify(cfg) }),
+                        prefer: 'return=minimal'
+                    });
+                }
+            } catch(e) { console.warn('Payment config Supabase save failed:', e); }
+        })();
+    }
+
+    async function loadPaymentConfigFromSupabase() {
+        try {
+            const res = await supabaseRequest('site_settings?key=eq.payment_config&select=value&limit=1');
+            if(Array.isArray(res) && res.length > 0 && res[0].value) {
+                const cfg = JSON.parse(res[0].value);
+                window._paymentConfig = cfg;
+                // Also sync to localStorage for offline fallback
+                localStorage.setItem(DB_PAY_CFG, JSON.stringify(cfg));
+            } else {
+                // No Supabase record yet — load from localStorage if exists
+                const local = localStorage.getItem(DB_PAY_CFG);
+                if(local) { try { window._paymentConfig = JSON.parse(local); } catch(e){} }
+            }
+        } catch(e) {
+            console.warn('Payment config Supabase load failed:', e);
+            const local = localStorage.getItem(DB_PAY_CFG);
+            if(local) { try { window._paymentConfig = JSON.parse(local); } catch(e){} }
+        }
     }
 
     // Get all payment submissions
@@ -1865,11 +2452,27 @@
 
     function processRegister(){
         const n = getEl('reg-name').value.trim(), p = getEl('reg-phone').value.trim(), pw = getEl('reg-pass').value.trim();
+        const refCodeEl = getEl('reg-ref');
+        const refCode = refCodeEl ? refCodeEl.value.trim() : '';
         if(!n || !p || !pw) return showToast("সব তথ্য দিন।");
         let u = getDB(DB_U);
         if(u.find(x => x.phone === p)) return showToast("অ্যাকাউন্ট আগে থেকেই আছে।");
-        u.push({name:n, phone:p, pass:pw, email:"", avatar:`https://ui-avatars.com/api/?name=${n}&background=E0F2FE&color=0EA5E9`, vSt:null, refId: generateRefId()});
-        setDB(DB_U, u); showToast("রেজিস্ট্রেশন সফল!"); switchAuthTab('login');
+        // ===== REFERRAL (v13): validate optional referral code (Affiliate ID) =====
+        let referrer = null;
+        if(refCode){
+            // Cannot self-refer at registration (new phone, but guard by code just in case) + must be valid + not disabled
+            referrer = validateAffiliateId(refCode, p);
+            if(!referrer){ return showToast("রেফারেল কোড সঠিক নয়। খালি রাখুন অথবা সঠিক Affiliate ID দিন।"); }
+        }
+        const newUser = {name:n, phone:p, pass:pw, email:"", avatar:`https://ui-avatars.com/api/?name=${n}&background=E0F2FE&color=0EA5E9`, vSt:null, refId: generateRefId(),
+            bal:0, vBal:0, role:'customer',
+            referredBy: referrer ? String(referrer.refId) : '', refBalance:0, referralCount:0, refTransferred:0, referralDisabled:false, downline:[]};
+        u.push(newUser);
+        setDB(DB_U, u);
+        // ===== REFERRAL (v13): instant signup bonus to the referrer (platform fund) =====
+        if(referrer){ creditSignupBonus(referrer.phone, newUser); }
+        if(refCodeEl) refCodeEl.value = '';
+        showToast("রেজিস্ট্রেশন সফল!"); switchAuthTab('login');
     }
 
     function processLogin(){
@@ -1960,6 +2563,7 @@
         if(id === 'view-add-balance') renderAddBalancePage();
         if(id === 'view-balance') renderBalanceView();
         if(id === 'view-inbox') renderInbox();
+        if(id === 'view-referral') renderReferralPage();
         if(id === 'view-favorites') renderFavorites();
         toggleSidebar(false); window.scrollTo(0,0);
     }
@@ -2014,6 +2618,7 @@
             {n:'টাকা উত্তোলন', i:'fa-money-bill-wave', a:"nav('view-balance')"},
             {n:'পেমেন্ট ইন-প্যানেল', i:'fa-credit-card', a:"showToast('শীঘ্রই আসছে ✨')"},
             {n:'সেলার ইনবক্স', i:'fa-envelope', a:"nav('view-inbox')"},
+            {n:'Refer & Earn', i:'fa-gift', a:"nav('view-referral')"},
             {n:'Support Center', i:'fa-headset', a:"openSupportCenter()"},
             {n:'লগ আউট', i:'fa-right-from-bracket', a:"processLogout()"}
         ];
@@ -2171,9 +2776,17 @@
             return;
         }
         const brands = adGet(ADB.brand);
+        const allUsers = window._users || [];
         el.innerHTML = prods.map(p => {
             const brand = brands.find(b => b.name === p.brand) || {};
-            const brandLogo = brand.logo || brand.image || '';
+            // Check brand CRUD logo first, then fall back to matching user avatar
+            const brandUser = allUsers.find(u => u.name === p.brand) || {};
+            // Exclude auto-generated ui-avatars.com URLs (they're just letter placeholders)
+            const rawAvatar = brandUser.avatar || '';
+            const userLogo = (rawAvatar && !rawAvatar.includes('ui-avatars.com')) ? rawAvatar : '';
+            // Also check the global logo uploaded via Website Settings (primary brand logo source)
+            const globalLogo = window._globalLogoUrl || '';
+            const brandLogo = brand.logo || brand.image || userLogo || globalLogo || '';
             const allImages = [p.image, ...(p.gallery || [])].filter(Boolean);
             const imagesHtml = allImages.length > 1
                 ? `<div class="flex gap-2 overflow-x-auto pb-1" style="scrollbar-width:none;-webkit-overflow-scrolling:touch;">${allImages.map(img => `<img src="${img}" class="h-52 w-40 object-cover rounded-xl flex-shrink-0 border border-slate-100" onerror="this.style.display='none'">`).join('')}</div>`
@@ -2181,12 +2794,15 @@
                     ? `<img src="${allImages[0]}" class="w-full object-cover rounded-xl border border-slate-100" style="max-height:280px;" onerror="this.style.display='none'">`
                     : `<div class="w-full bg-slate-100 rounded-xl flex items-center justify-center text-gray-300 text-4xl" style="height:180px;"><i class="fa-solid fa-image"></i></div>`;
             const initials = (p.brand||'?').charAt(0).toUpperCase();
-            const logoHtml = brandLogo
-                ? `<img src="${brandLogo}" class="w-full h-full object-cover" onerror="this.style.display='none'">`
-                : `<span class="font-black text-primary text-base">${initials}</span>`;
+            // Build avatar using CSS background-image (most reliable: no overflow-hidden clipping, no object-fit conflicts)
+            // background-size:contain ensures the FULL logo is always visible inside the circle
+            const avatarStyle = brandLogo
+                ? `background-image:url('${brandLogo}');background-size:contain;background-position:center;background-repeat:no-repeat;background-color:#fff;`
+                : '';
+            const logoHtml = brandLogo ? '' : `<span class="font-black text-primary text-base">${initials}</span>`;
             return `<div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="flex items-center gap-3 px-4 pt-4 pb-3">
-                    <div class="w-11 h-11 rounded-full overflow-hidden border-2 border-sky-100 bg-primary/10 flex items-center justify-center flex-shrink-0">${logoHtml}</div>
+                    <div class="w-12 h-12 rounded-full border-2 border-sky-100 bg-white flex items-center justify-center flex-shrink-0" style="${avatarStyle}">${logoHtml}</div>
                     <div class="flex-1 min-w-0">
                         <div class="font-black text-gray-800 text-sm truncate">${p.brand || 'অজানা ব্র্যান্ড'}</div>
                         <div class="flex items-center gap-1.5 flex-wrap mt-0.5">
@@ -2546,7 +3162,7 @@
             ad: getEl('co-address').value.trim(),
             land: getEl('co-landmark').value.trim(),
             post: getEl('co-postal').value.trim(),
-            dc: dc, adv: advance, com: getEl('co-comments').value.trim(),
+            dc: dc, deliveryCharge: dc, adv: advance, com: getEl('co-comments').value.trim(),
             coupon: window._appliedVoucher ? window._appliedVoucher.code : null,
             couponDisc: voucherDisc,
             st: 'Pending', cod: codAmount, pr: tp, items: orderItems,
@@ -2677,7 +3293,7 @@
         // Async Supabase sync
         (async () => {
             try {
-                await supabaseRequest('orders?order_id=eq.' + encodeURIComponent(o.id), {
+                await supabaseRequest('orders?id=eq.' + encodeURIComponent(o.id), {
                     method: 'PATCH',
                     body: JSON.stringify({ status: 'Cancelled', timeline: JSON.stringify(od[idx].tl) }),
                     prefer: 'return=minimal'
@@ -2723,10 +3339,12 @@
         return (getDB(DB_O) || []).filter(o => o.rPh === ph && o.st === 'Delivered').reduce((s, o) => s + Number(o.pr||0), 0);
     }
     function toggleBalance(){
-        const b = getEl('balance-display'); if(b.innerText !== '৳ ব্যালেন্স দেখুন') return;
+        const span = getEl('balance-display-text');
+        if(!span) return;
+        if(span.innerText !== '৳ ব্যালেন্স') return;
         const bal = getCustomerBalance();
-        b.innerText = `৳ ${bal.toLocaleString('en-IN')}`;
-        clearTimeout(balTimer); balTimer = setTimeout(() => { b.innerText = '৳ ব্যালেন্স দেখুন'; }, 3000);
+        span.innerText = `৳ ${bal.toLocaleString('en-IN')}`;
+        clearTimeout(balTimer); balTimer = setTimeout(() => { span.innerText = '৳ ব্যালেন্স'; }, 3000);
     }
 
     // ========================= INBOX (Task 3 - Admin Message System) =========================
@@ -2765,6 +3383,180 @@
             </div>`;
         }).join('');
         markInboxRead(); // v11 TASK 4: opening inbox marks all shown messages read → badge disappears
+    }
+
+    // ========================= REFER & EARN (v13) =========================
+    function renderReferralPage(){
+        const body = getEl('referral-body'); if(!body) return;
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN'){ body.innerHTML = '<p class="text-center text-gray-400 text-sm py-8">লগইন করুন।</p>'; return; }
+        const st = getReferralSettings();
+        if(!st.system_enabled){
+            body.innerHTML = '<div class="text-center py-12"><i class="fa-solid fa-gift text-4xl text-gray-300 mb-3 block"></i><p class="text-gray-400 text-sm font-bold">রেফারেল সিস্টেম বর্তমানে বন্ধ আছে।</p></div>';
+            return;
+        }
+        const s = getReferralStats(ph);
+        const esc = (typeof adEsc === 'function') ? adEsc : (x => String(x==null?'':x));
+        const money = v => '৳' + Number(v||0).toLocaleString('en-IN');
+
+        // ---- Commission / income history (this user as beneficiary) ----
+        const hist = (s.myTxns||[]).slice().sort((a,b)=>b.ts-a.ts);
+        const histRows = hist.length ? hist.map(t => {
+            const typeLabel = t.type === 'signup' ? '<span class="bg-sky-100 text-sky-700 px-1.5 py-0.5 rounded text-[9px] font-black">সাইনআপ বোনাস</span>'
+                : t.type === 'commission' ? '<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[9px] font-black">অর্ডার কমিশন</span>'
+                : '<span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[9px] font-black">ট্রান্সফার</span>';
+            const amtColor = t.type === 'transfer' ? 'text-purple-700' : 'text-green-700';
+            const amtSign = t.type === 'transfer' ? '-' : '+';
+            return '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-bold">' + esc(t.fromName || (t.type==='transfer'?'নিজে':'-')) + '</td>'
+                + '<td class="p-2 text-[10px] text-primary font-black">' + (t.orderId ? '#'+esc(t.orderId) : '-') + '</td>'
+                + '<td class="p-2">' + typeLabel + '</td>'
+                + '<td class="p-2 text-[10px] font-black ' + amtColor + '">' + amtSign + money(t.amount) + '</td>'
+                + '<td class="p-2"><span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[9px] font-black">' + esc(t.status||'Completed') + '</span></td>'
+                + '<td class="p-2 text-[9px] text-gray-400 whitespace-nowrap">' + esc(t.dt||'') + '</td></tr>';
+        }).join('') : '<tr><td colspan="6" class="p-4 text-center text-gray-400 text-xs">কোনো কমিশন হিস্ট্রি নেই</td></tr>';
+
+        // ---- My referrals (downline) ----
+        const orders = getDB(DB_O) || [];
+        const refRows = (s.referred||[]).length ? s.referred.map(d => {
+            const dOrders = orders.filter(o => o.rPh === d.phone);
+            const dCommission = (window._referralTxns||[]).filter(t => t.beneficiary === ph && t.fromUser === d.phone && (t.type==='signup'||t.type==='commission')).reduce((x,t)=>x+Number(t.amount||0),0);
+            const active = dOrders.some(o => o.st === 'Delivered');
+            const statusBadge = active ? '<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[9px] font-black">Active</span>' : '<span class="bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded text-[9px] font-black">Inactive</span>';
+            return '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-bold">' + esc(d.name||'User') + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-gray-500">' + esc(maskAffiliateId(d.refId)) + '</td>'
+                + '<td class="p-2 text-[9px] text-gray-400 whitespace-nowrap">' + esc(d.joinDt||'-') + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-center">' + dOrders.length + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-green-700">' + money(dCommission) + '</td>'
+                + '<td class="p-2">' + statusBadge + '</td></tr>';
+        }).join('') : '<tr><td colspan="6" class="p-4 text-center text-gray-400 text-xs">এখনো কেউ আপনার রেফারে যোগ দেয়নি</td></tr>';
+
+        // ---- Leaderboard ----
+        let leaderboardHtml = '';
+        if(st.leaderboard_enabled){
+            const lb = getReferralLeaderboard(10);
+            const lbRows = lb.length ? lb.map((r,i) => {
+                const rank = i+1;
+                const medal = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':('#'+rank);
+                const isMe = String(r.refId) === s.refId;
+                return '<tr class="border-b last:border-0 ' + (isMe?'bg-sky-50':'') + '"><td class="p-2 text-sm font-black text-center">' + medal + '</td>'
+                    + '<td class="p-2 text-[11px] font-black">' + esc(r.name) + (isMe?' <span class="text-[9px] text-primary">(আপনি)</span>':'') + '</td>'
+                    + '<td class="p-2 text-[10px] font-black text-gray-500">' + esc(maskAffiliateId(r.refId)) + '</td>'
+                    + '<td class="p-2 text-[10px] font-black text-center">' + r.totalReferral + '</td>'
+                    + '<td class="p-2 text-[10px] font-black text-green-700">' + money(r.totalCommission) + '</td></tr>';
+            }).join('') : '<tr><td colspan="5" class="p-4 text-center text-gray-400 text-xs">লিডারবোর্ড খালি</td></tr>';
+            leaderboardHtml = '<div class="bg-white rounded-xl shadow-sm border overflow-hidden">'
+                + '<div class="px-3 py-2 bg-gradient-to-r from-amber-50 to-orange-50 border-b font-black text-xs text-gray-700"><i class="fa-solid fa-trophy mr-1 text-amber-500"></i>টপ ১০ লিডারবোর্ড</div>'
+                + '<div class="overflow-x-auto"><table class="w-full text-left min-w-[380px]"><thead class="bg-slate-50 border-b"><tr>'
+                + '<th class="p-2 text-[9px] font-black text-gray-500 text-center">র‍্যাঙ্ক</th><th class="p-2 text-[9px] font-black text-gray-500">নাম</th>'
+                + '<th class="p-2 text-[9px] font-black text-gray-500">Affiliate ID</th><th class="p-2 text-[9px] font-black text-gray-500 text-center">রেফারেল</th>'
+                + '<th class="p-2 text-[9px] font-black text-gray-500">কমিশন</th></tr></thead><tbody class="font-bold">' + lbRows + '</tbody></table></div></div>';
+        }
+
+        // ---- Notifications (referral-related inbox messages) ----
+        const allMsgs = getDB(DB_MSG) || [];
+        const refNotifs = allMsgs.filter(m => (m.to === ph) && typeof m.text === 'string' && /রেফারেল|কমিশন|বোনাস|ট্রান্সফার/.test(m.text)).slice(0,8);
+        const notifHtml = refNotifs.length ? refNotifs.map(m =>
+            '<div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex items-start gap-2"><i class="fa-solid fa-bell text-primary text-sm mt-0.5"></i><div class="flex-1"><p class="text-[11px] font-bold text-gray-700 leading-relaxed">' + esc(m.text) + '</p><p class="text-[9px] text-gray-400 mt-1">' + esc(m.dt||'') + '</p></div></div>'
+        ).join('') : '<p class="text-center text-gray-400 text-xs py-4">কোনো নোটিফিকেশন নেই</p>';
+
+        body.innerHTML =
+            // Welcome + Affiliate ID card
+            '<div class="gradient-bg text-white rounded-2xl p-5 shadow-lg">'
+                + '<p class="text-sm font-bold opacity-90">স্বাগতম, ' + esc(s.user.name||'সেলার') + '! 👋</p>'
+                + '<p class="text-[12px] font-bold opacity-80 mt-1">বন্ধুদের রেফার করুন এবং আয় করুন।</p>'
+                + '<div class="mt-3 bg-white/15 rounded-xl p-3 flex items-center justify-between gap-2">'
+                    + '<div><p class="text-[10px] font-bold opacity-80">আপনার রেফারেল কোড (Affiliate ID)</p><p class="text-xl font-black tracking-wider" id="ref-my-code">' + esc(s.refId) + '</p></div>'
+                    + '<button onclick="copyReferralCode()" class="bg-white text-primary font-black px-3 py-2 rounded-lg text-xs active:scale-95 transition-transform whitespace-nowrap"><i class="fa-solid fa-copy mr-1"></i>কপি</button>'
+                + '</div>'
+            + '</div>'
+            // Referral balance + transfer
+            + '<div class="bg-purple-50 border border-purple-200 rounded-2xl p-5 shadow-sm">'
+                + '<p class="text-xs font-bold text-purple-500">উপলব্ধ রেফারেল ব্যালেন্স</p>'
+                + '<h2 class="text-3xl font-black mt-1 text-purple-700">' + money(s.refBalance) + '</h2>'
+                + '<button onclick="openReferralTransferModal()" class="w-full mt-3 gradient-bg text-white font-black py-3 rounded-xl shadow active:scale-95 transition-transform text-sm"><i class="fa-solid fa-money-bill-transfer mr-1"></i> মেইন ব্যালেন্সে ট্রান্সফার করুন</button>'
+                + '<p class="text-[11px] font-bold text-purple-400 mt-2 text-center"><i class="fa-solid fa-circle-info mr-1"></i>সর্বনিম্ন ট্রান্সফার ' + money(st.min_transfer) + '</p>'
+            + '</div>'
+            // Stats grid
+            + '<div class="grid grid-cols-2 gap-2">'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">মোট রেফারেল</p><p class="text-lg font-black text-gray-800">' + s.totalReferral + '</p></div>'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">অ্যাক্টিভ রেফারেল</p><p class="text-lg font-black text-green-600">' + s.activeReferral + '</p></div>'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">সাইনআপ বোনাস আয়</p><p class="text-lg font-black text-sky-600">' + money(s.signupIncome) + '</p></div>'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">অর্ডার কমিশন আয়</p><p class="text-lg font-black text-teal-600">' + money(s.commissionIncome) + '</p></div>'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">মোট কমিশন</p><p class="text-lg font-black text-green-700">' + money(s.totalCommission) + '</p></div>'
+                + '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">মোট ট্রান্সফার</p><p class="text-lg font-black text-purple-700">' + money(s.totalTransferred) + '</p></div>'
+            + '</div>'
+            // Rules
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden">'
+                + '<div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700"><i class="fa-solid fa-scroll mr-1 text-primary"></i>রেফারেল নিয়মাবলী</div>'
+                + '<div class="p-4 space-y-2 text-[11px] font-bold text-gray-600 leading-relaxed">'
+                    + '<p>১. আপনার Affiliate ID ই আপনার রেফারেল কোড — বন্ধুকে দিন, তিনি রেজিস্ট্রেশনের সময় সেটি দিলে আপনি বোনাস পাবেন।</p>'
+                    + '<p>২. একজন নতুন ইউজার আপনার কোড দিয়ে রেজিস্ট্রেশন করলেই সঙ্গে সঙ্গে ' + money(st.signup_bonus) + ' সাইনআপ বোনাস আপনার রেফারেল ব্যালেন্সে যোগ হবে।</p>'
+                    + '<p>৩. আপনার রেফার করা ইউজারের প্রথম ' + st.max_commission_orders + ' টি <b>ডেলিভারড</b> অর্ডার থেকে প্রফিটের ' + st.commission_percent + '% কমিশন পাবেন।</p>'
+                    + '<p>৪. ক্যান্সেল, রিফান্ড, পেন্ডিং বা প্রসেসিং অর্ডারে কোনো কমিশন প্রযোজ্য নয়।</p>'
+                    + '<p>৫. রেফারেল ব্যালেন্স আলাদা — মেইন ব্যালেন্সে ট্রান্সফার (সর্বনিম্ন ' + money(st.min_transfer) + ') করার পর উইথড্র করা যাবে।</p>'
+                    + '<p>🎁 রেফারার সাইনআপ বোনাস: আপনার Affiliate ID (Referral Code) ব্যবহার করে কেউ সফলভাবে নতুন অ্যাকাউন্ট তৈরি করলে, আপনি প্রতিটি সফল রেজিস্ট্রেশনের জন্য তাৎক্ষণিক ' + money(st.referrer_signup_bonus||0) + ' Referral Signup Bonus পাবেন। এই বোনাস আপনার Referral Balance-এ যোগ হবে।</p>'
+                + '</div>'
+            + '</div>'
+            // Commission history
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden">'
+                + '<div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700"><i class="fa-solid fa-clock-rotate-left mr-1 text-primary"></i>কমিশন হিস্ট্রি</div>'
+                + '<div class="overflow-x-auto"><table class="w-full text-left min-w-[520px]"><thead class="bg-slate-50 border-b"><tr>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">ইউজার</th><th class="p-2 text-[9px] font-black text-gray-500">অর্ডার</th>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">টাইপ</th><th class="p-2 text-[9px] font-black text-gray-500">পরিমাণ</th>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">স্ট্যাটাস</th><th class="p-2 text-[9px] font-black text-gray-500">সময়</th></tr></thead>'
+                    + '<tbody class="font-bold">' + histRows + '</tbody></table></div>'
+            + '</div>'
+            // My referrals
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden">'
+                + '<div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700"><i class="fa-solid fa-users mr-1 text-primary"></i>আমার রেফারেল</div>'
+                + '<div class="overflow-x-auto"><table class="w-full text-left min-w-[520px]"><thead class="bg-slate-50 border-b"><tr>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">নাম</th><th class="p-2 text-[9px] font-black text-gray-500">Affiliate ID</th>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">জয়েন</th><th class="p-2 text-[9px] font-black text-gray-500 text-center">অর্ডার</th>'
+                    + '<th class="p-2 text-[9px] font-black text-gray-500">কমিশন</th><th class="p-2 text-[9px] font-black text-gray-500">স্ট্যাটাস</th></tr></thead>'
+                    + '<tbody class="font-bold">' + refRows + '</tbody></table></div>'
+            + '</div>'
+            // Leaderboard
+            + leaderboardHtml
+            // Notifications
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden">'
+                + '<div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700"><i class="fa-solid fa-bell mr-1 text-primary"></i>নোটিফিকেশন</div>'
+                + '<div class="p-3 space-y-2">' + notifHtml + '</div>'
+            + '</div>';
+    }
+
+    function copyReferralCode(){
+        const el = getEl('ref-my-code'); if(!el) return;
+        const code = el.innerText.trim();
+        const done = () => showToast('রেফারেল কোড কপি হয়েছে! ✓');
+        if(navigator.clipboard && navigator.clipboard.writeText){
+            navigator.clipboard.writeText(code).then(done).catch(() => { fallbackCopy(code); done(); });
+        } else { fallbackCopy(code); done(); }
+    }
+    function fallbackCopy(text){
+        try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } catch(e){}
+    }
+
+    function openReferralTransferModal(){
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN'){ showToast('লগইন করুন।'); return; }
+        const st = getReferralSettings();
+        const s = getReferralStats(ph);
+        const balEl = getEl('rt-avail-bal'); if(balEl) balEl.innerText = '৳ ' + Number(s.refBalance||0).toLocaleString('en-IN');
+        const minEl = getEl('rt-min-info'); if(minEl) minEl.innerText = 'সর্বনিম্ন ট্রান্সফার ৳' + Number(st.min_transfer||0).toLocaleString('en-IN');
+        const amtEl = getEl('rt-amount'); if(amtEl) amtEl.value = '';
+        const m = getEl('referral-transfer-modal'); if(m){ m.classList.remove('hidden'); m.classList.add('flex'); }
+    }
+    function closeReferralTransferModal(){
+        const m = getEl('referral-transfer-modal'); if(m){ m.classList.add('hidden'); m.classList.remove('flex'); }
+    }
+    function submitReferralTransfer(){
+        const amtEl = getEl('rt-amount');
+        const amount = amtEl ? Number(amtEl.value) : 0;
+        const ok = transferReferralToMain(amount);
+        if(ok){
+            closeReferralTransferModal();
+            renderReferralPage();
+        }
     }
 
     // Customer-facing balance statement page (rendered on nav to view-balance).
@@ -2858,12 +3650,47 @@
         let uList = getDB(DB_U); let uIdx = uList.findIndex(x => x.phone === localStorage.getItem(DB_S));
         if(uIdx === -1) return; let u = uList[uIdx];
         if(!u.refId) { u.refId = generateRefId(); setDB(DB_U, uList); }
-        getEl('prof-name').value = u.name; getEl('prof-phone').value = u.phone; getEl('prof-email').value = u.email || ''; getEl('prof-img').value = u.avatar;
-        getEl('prof-display-name').innerText = u.name; getEl('prof-ref-id').innerText = u.refId; getEl('prof-img-preview-2').src = u.avatar;
+        getEl('prof-name').value = u.name; getEl('prof-phone').value = u.phone; getEl('prof-email').value = u.email || ''; getEl('prof-img').value = u.avatar || '';
+        getEl('prof-display-name').innerText = u.name; getEl('prof-ref-id').innerText = u.refId; getEl('prof-img-preview-2').src = u.avatar || '';
+        // Update upload preview
+        const uploadPrev = getEl('prof-img-preview-upload');
+        const uploadPlaceholder = getEl('prof-img-placeholder');
+        if(uploadPrev && u.avatar) {
+            uploadPrev.src = u.avatar;
+            uploadPrev.classList.remove('hidden');
+            if(uploadPlaceholder) uploadPlaceholder.classList.add('hidden');
+        } else if(uploadPrev) {
+            uploadPrev.classList.add('hidden');
+            if(uploadPlaceholder) uploadPlaceholder.classList.remove('hidden');
+        }
     }
     function saveProfile(){
         let u = getDB(DB_U); let i = u.findIndex(x => x.phone === localStorage.getItem(DB_S));
-        if(i > -1) { u[i].name = getEl('prof-name').value; u[i].email = getEl('prof-email').value; let imgUrl = getEl('prof-img').value; u[i].avatar = imgUrl || `https://ui-avatars.com/api/?name=${u[i].name}&background=E0F2FE&color=0EA5E9`; setDB(DB_U, u); syncSidebar(u[i].phone); showToast('আপনার প্রোফাইল তথ্য আপডেট হয়েছে।'); loadProfileData(); }
+        if(i > -1) { u[i].name = getEl('prof-name').value; u[i].email = getEl('prof-email').value; let imgUrl = (getEl('prof-img')||{}).value || ''; u[i].avatar = imgUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(u[i].name)}&background=E0F2FE&color=0EA5E9`; setDB(DB_U, u); syncSidebar(u[i].phone); showToast('আপনার প্রোফাইল তথ্য আপডেট হয়েছে।'); loadProfileData(); }
+    }
+
+    function handleProfilePicUpload(input) {
+        const file = input.files && input.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')) { showToast('শুধুমাত্র ছবি ফাইল সাপোর্টেড।'); return; }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64 = e.target.result;
+            // Store in hidden input
+            const hiddenInput = getEl('prof-img');
+            if(hiddenInput) hiddenInput.value = base64;
+            // Show immediate preview
+            const prev = getEl('prof-img-preview-upload');
+            const placeholder = getEl('prof-img-placeholder');
+            if(prev) { prev.src = base64; prev.classList.remove('hidden'); }
+            if(placeholder) placeholder.classList.add('hidden');
+            // Also update the top profile preview
+            const prev2 = getEl('prof-img-preview-2');
+            if(prev2) prev2.src = base64;
+            showToast('ছবি লোড হয়েছে। সেভ করতে "তথ্য আপডেট করুন" চাপুন।');
+        };
+        reader.onerror = function() { showToast('ছবি লোড করতে সমস্যা হয়েছে।'); };
+        reader.readAsDataURL(file);
     }
 
     /* ===================================================================
@@ -2912,7 +3739,9 @@
         {k:'withdraw-settings', label:'Withdraw Settings', icon:'fa-sliders'},
         {k:'messages', label:'Customer Messages', icon:'fa-comments'},
         {k:'support', label:'Support & Reports', icon:'fa-ticket-simple'},
-        {k:'balance-requests', label:'Balance Requests', icon:'fa-wallet'}
+        {k:'balance-requests', label:'Balance Requests', icon:'fa-wallet'},
+        {k:'referral', label:'Refer & Earn', icon:'fa-gift'},
+        {k:'fcm', label:'Push Notifications', icon:'fa-bell'}
     ];
 
     const ORDER_STATUSES = ['Pending','Processing','Confirmed','Shipped','Delivered','Cancelled','Returned'];
@@ -2987,6 +3816,8 @@
             case 'messages': renderAdminMessages(); break;
             case 'support': renderAdminSupport(); break;
             case 'balance-requests': renderAdminBalanceRequests(); break;
+            case 'referral': renderAdminReferral(); break;
+            case 'fcm': renderAdminFCM(); break;
         }
     }
 
@@ -3598,7 +4429,7 @@
         setDB(DB_O, remaining);
         // Delete from Supabase (non-blocking, one by one)
         toDelete.forEach(o => {
-            supabaseRequest('orders?order_id=eq.' + encodeURIComponent(o.id), { method: 'DELETE' })
+            supabaseRequest('orders?id=eq.' + encodeURIComponent(o.id), { method: 'DELETE' })
                 .catch(err => console.warn('Auto-delete cancelled order failed:', o.id, err));
         });
         console.log('[AutoPurge] Deleted ' + toDelete.length + ' cancelled order(s) older than 24h:', toDelete.map(o => o.id));
@@ -3704,12 +4535,24 @@
                 }
             }
         }
+        // ===== REFERRAL (v13): credit order commission to the reseller's referrer =====
+        // 3% of profit, first N delivered orders only, no duplicate, delivered-only.
+        if(n === 'Delivered' && !o[i].commissionCredited){
+            try {
+                const credited = creditOrderCommission(o[i]);
+                if(credited){
+                    const _st = getReferralSettings();
+                    const _comm = Math.round(Number(o[i].pr||0) * Number(_st.commission_percent||0) / 100);
+                    o[i].tl.unshift({time: adminTimeStamp(), text: `System >> Referral commission ৳${_comm} (${_st.commission_percent}% of profit) credited to referrer`});
+                }
+            } catch(e){ console.warn('referral commission failed:', e); }
+        }
         setDB(DB_O, o);
         renderAdminOrders(currentOrderFilter); openAdminOrder(id); showToast('Order status updated ✓');
         // Async sync status to Supabase
         (async () => {
             try {
-                await supabaseRequest('orders?order_id=eq.' + encodeURIComponent(id), {
+                await supabaseRequest('orders?id=eq.' + encodeURIComponent(id), {
                     method: 'PATCH',
                     body: JSON.stringify({ status: n, timeline: JSON.stringify(o[i].tl) }),
                     prefer: 'return=minimal'
@@ -4219,6 +5062,11 @@
         const url = await loadGlobalLogoFromSupabase();
         window._globalLogoUrl = url || '';
         await applyGlobalLogo(url);
+        // Re-render New Posts page if currently visible so logo appears immediately
+        const npEl = document.getElementById('view-new-posts');
+        if(npEl && !npEl.classList.contains('hidden')) {
+            try { renderNewPostsPage(); } catch(e) {}
+        }
     }
 
     async function renderGlobalLogoPanel() {
@@ -4277,7 +5125,7 @@
     // ------------------------- GENERIC CRUD MODULES -------------------------
     const CRUD_SCHEMA = {
         categories:{store:ADB.cat, title:'Categories', icon:'fa-layer-group', cols:['name','slug','image'], fields:[{k:'name',label:'Category Name',type:'text',req:true},{k:'slug',label:'Slug',type:'text'},{k:'image',label:'Image URL',type:'text'}]},
-        brands:{store:ADB.brand, title:'Brands', icon:'fa-tags', cols:['name','status'], fields:[{k:'name',label:'Brand Name',type:'text',req:true},{k:'status',label:'Status',type:'select',opts:['Active','Inactive']}]},
+        brands:{store:ADB.brand, title:'Brands', icon:'fa-tags', cols:['name','logo','status'], fields:[{k:'name',label:'Brand Name',type:'text',req:true},{k:'logo',label:'Brand Logo URL',type:'text'},{k:'status',label:'Status',type:'select',opts:['Active','Inactive']}]},
         reviews:{store:ADB.review, title:'Reviews', icon:'fa-star', cols:['product','customer','rating','status'], fields:[{k:'product',label:'Product',type:'text',req:true},{k:'customer',label:'Customer',type:'text'},{k:'rating',label:'Rating (1-5)',type:'number'},{k:'comment',label:'Comment',type:'textarea'},{k:'status',label:'Status',type:'select',opts:['Pending','Approved','Rejected']}]},
         coupons:{store:ADB.coupon, title:'Coupons', icon:'fa-ticket', cols:['code','discount','type','status'], fields:[{k:'code',label:'Coupon Code',type:'text',req:true},{k:'discount',label:'Discount Value',type:'number',req:true},{k:'type',label:'Type',type:'select',opts:['Percent','Fixed']},{k:'minOrder',label:'Min Order ৳',type:'number'},{k:'status',label:'Status',type:'select',opts:['Active','Expired']}]},
         flashsale:{store:ADB.flash, title:'Flash Sale', icon:'fa-bolt', cols:['title','discount','start','end'], fields:[{k:'title',label:'Sale Title',type:'text',req:true},{k:'discount',label:'Discount %',type:'number'},{k:'start',label:'Start Date',type:'date'},{k:'end',label:'End Date',type:'date'},{k:'status',label:'Status',type:'select',opts:['Scheduled','Active','Ended']}]},
@@ -4693,17 +5541,21 @@
         const cfg = getWithdrawConfig();
         const el = document.getElementById('withdraw-avail-bal');
         if(el) el.innerText = '৳ ' + bal.toLocaleString('en-IN');
-        // Populate payment methods from admin config
+        // Populate payment methods from admin config (preserve existing selection)
         const methodSel = document.getElementById('wd-method');
         if(methodSel) {
             const methods = cfg.paymentMethods.split(',').map(m => m.trim()).filter(Boolean);
+            const prevMethod = methodSel.value;
             methodSel.innerHTML = '<option value="">-- মেথড সিলেক্ট করুন --</option>' + methods.map(m => `<option value="${m}">${m}</option>`).join('');
+            if(prevMethod) methodSel.value = prevMethod;
         }
-        // Populate amount options
+        // Populate amount options (preserve existing selection)
         const amtSel = document.getElementById('wd-amount-select');
         if(amtSel) {
             const opts = cfg.amountOptions.split(',').map(a => Number(a.trim())).filter(a => !isNaN(a) && a > 0);
+            const prevAmtSel = amtSel.value;
             amtSel.innerHTML = '<option value="">-- পরিমাণ বেছে নিন --</option>' + opts.map(a => `<option value="${a}">৳${a.toLocaleString('en-IN')}</option>`).join('');
+            if(prevAmtSel) amtSel.value = prevAmtSel;
         }
         // Show min amount and processing time
         const minEl = document.getElementById('wd-min-info');
@@ -4760,12 +5612,13 @@
         setDB(DB_WD, list);
         closeWithdrawModal();
         showToast(cfg.successMsg);
-        // Reset form
+        // Reset form fields after successful submission
         document.getElementById('wd-method').value = '';
         document.getElementById('wd-amount').value = '';
         document.getElementById('wd-note').value = '';
         const amtSel = document.getElementById('wd-amount-select');
         if(amtSel) amtSel.value = '';
+        // Keep wd-account (phone) pre-filled for convenience
         // Refresh balance view if open
         if(document.getElementById('view-balance') && !document.getElementById('view-balance').classList.contains('hidden')) renderBalanceView();
     }
@@ -4822,6 +5675,301 @@
         setDB(DB_WD, list);
         renderAdminWithdrawals();
         showToast('Withdraw request ' + newStatus + ' ✓');
+    }
+
+    // ========================= ADMIN: REFER & EARN (v13) =========================
+    let _adRefTab = 'dashboard';
+    function renderAdminReferral(){
+        const c = getEl('ad-mod-referral'); if(!c) return;
+        const tabs = [
+            {k:'dashboard', label:'Dashboard', icon:'fa-gauge-high'},
+            {k:'settings', label:'Settings', icon:'fa-sliders'},
+            {k:'users', label:'User Management', icon:'fa-user-gear'},
+            {k:'logs', label:'Logs', icon:'fa-list'}
+        ];
+        const nav = '<div class="flex flex-wrap gap-2 mb-4">' + tabs.map(t =>
+            '<button onclick="switchAdRefTab(\'' + t.k + '\')" class="px-3 py-1.5 rounded-lg text-[11px] font-black ' + (_adRefTab===t.k?'gradient-bg text-white':'bg-slate-100 text-gray-600') + '"><i class="fa-solid ' + t.icon + ' mr-1"></i>' + t.label + '</button>'
+        ).join('') + '</div>';
+        let inner = '';
+        if(_adRefTab === 'dashboard') inner = adRefDashboardHtml();
+        else if(_adRefTab === 'settings') inner = adRefSettingsHtml();
+        else if(_adRefTab === 'users') inner = adRefUsersHtml();
+        else if(_adRefTab === 'logs') inner = adRefLogsHtml();
+        c.innerHTML = '<div class="p-4"><h2 class="font-black text-base text-gray-800 mb-3"><i class="fa-solid fa-gift mr-2 text-primary"></i>Refer & Earn</h2>' + nav + inner + '</div>';
+    }
+    function switchAdRefTab(t){ _adRefTab = t; renderAdminReferral(); }
+
+    function adRefDashboardHtml(){
+        const users = getDB(DB_U) || [];
+        const txns = window._referralTxns || [];
+        const totalReferrals = users.reduce((s,u) => s + (Array.isArray(u.downline) ? u.downline.length : 0), 0)
+            || users.filter(u => u.referredBy).length;
+        const totalSignupPaid = txns.filter(t => t.type==='signup').reduce((s,t)=>s+Number(t.amount||0),0);
+        const totalCommissionPaid = txns.filter(t => t.type==='commission').reduce((s,t)=>s+Number(t.amount||0),0);
+        const totalRefBalance = users.reduce((s,u)=>s+Number(u.refBalance||0),0);
+        const totalTransfers = txns.filter(t => t.type==='transfer').reduce((s,t)=>s+Number(t.amount||0),0);
+        const money = v => '৳' + Number(v||0).toLocaleString('en-IN');
+        const card = (label,val,color) => '<div class="bg-white rounded-xl p-3 text-center shadow-sm border"><p class="text-[10px] font-bold text-gray-400">' + label + '</p><p class="text-lg font-black ' + color + '">' + val + '</p></div>';
+        // Recent activity
+        const recent = txns.slice(0,10);
+        const recentRows = recent.length ? recent.map(t => {
+            const typeLabel = t.type==='signup'?'Signup Bonus':t.type==='commission'?'Commission':'Transfer';
+            return '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-bold">' + adEsc(t.fromName||t.beneficiary||'-') + '</td><td class="p-2 text-[10px]">' + typeLabel + '</td><td class="p-2 text-[10px] font-black text-green-700">' + money(t.amount) + '</td><td class="p-2 text-[9px] text-gray-400">' + adEsc(t.dt||'') + '</td></tr>';
+        }).join('') : '<tr><td colspan="4" class="p-3 text-center text-gray-400 text-xs">No activity</td></tr>';
+        // Top referrers
+        const lb = getReferralLeaderboard(10);
+        const topRows = lb.length ? lb.map((r,i) => '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-black text-center">#' + (i+1) + '</td><td class="p-2 text-[10px] font-bold">' + adEsc(r.name) + '</td><td class="p-2 text-[10px] text-gray-500">' + adEsc(r.refId) + '</td><td class="p-2 text-[10px] font-black text-center">' + r.totalReferral + '</td><td class="p-2 text-[10px] font-black text-green-700">' + money(r.totalCommission) + '</td></tr>').join('') : '<tr><td colspan="5" class="p-3 text-center text-gray-400 text-xs">No referrers yet</td></tr>';
+        return '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">'
+            + card('Total Referrals', totalReferrals, 'text-gray-800')
+            + card('Signup Bonus Paid', money(totalSignupPaid), 'text-sky-600')
+            + card('Commission Paid', money(totalCommissionPaid), 'text-teal-600')
+            + card('Total Referral Balance', money(totalRefBalance), 'text-purple-700')
+            + card('Total Transfers', money(totalTransfers), 'text-green-700')
+            + card('Total Paid Out', money(totalSignupPaid+totalCommissionPaid), 'text-orange-600')
+            + '</div>'
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-4"><div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700">Recent Activity</div><div class="overflow-x-auto"><table class="w-full text-left min-w-[400px]"><thead class="bg-slate-50 border-b"><tr><th class="p-2 text-[9px] font-black text-gray-500">User</th><th class="p-2 text-[9px] font-black text-gray-500">Type</th><th class="p-2 text-[9px] font-black text-gray-500">Amount</th><th class="p-2 text-[9px] font-black text-gray-500">Date</th></tr></thead><tbody class="font-bold">' + recentRows + '</tbody></table></div></div>'
+            + '<div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700">Top Referrers</div><div class="overflow-x-auto"><table class="w-full text-left min-w-[400px]"><thead class="bg-slate-50 border-b"><tr><th class="p-2 text-[9px] font-black text-gray-500 text-center">Rank</th><th class="p-2 text-[9px] font-black text-gray-500">Name</th><th class="p-2 text-[9px] font-black text-gray-500">Affiliate ID</th><th class="p-2 text-[9px] font-black text-gray-500 text-center">Referrals</th><th class="p-2 text-[9px] font-black text-gray-500">Commission</th></tr></thead><tbody class="font-bold">' + topRows + '</tbody></table></div></div>';
+    }
+
+    function adRefSettingsHtml(){
+        const s = getReferralSettings();
+        const field = (id,label,val,type) => '<div><label class="block text-[11px] font-black text-gray-500 mb-1">' + label + '</label><input id="' + id + '" type="' + (type||'number') + '" value="' + val + '" class="w-full bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-2 font-bold text-sm focus:border-primary outline-none"></div>';
+        const toggle = (id,label,on) => '<label class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5"><span class="text-[11px] font-black text-gray-600">' + label + '</span><input id="' + id + '" type="checkbox" ' + (on?'checked':'') + ' class="w-5 h-5 accent-sky-500"></label>';
+        return '<div class="bg-white rounded-xl shadow-sm border p-4 space-y-3">'
+            + '<div class="grid grid-cols-2 gap-3">'
+                + field('ref-set-signup','Signup Bonus (৳)', s.signup_bonus)
+                + field('ref-set-referrer-signup','রেফারার সাইনআপ বোনাস (৳)', s.referrer_signup_bonus)
+                + field('ref-set-commission','Order Commission (%)', s.commission_percent)
+                + field('ref-set-maxorders','Max Commission Orders', s.max_commission_orders)
+                + field('ref-set-mintransfer','Min Transfer (৳)', s.min_transfer)
+            + '</div>'
+            + '<div class="grid grid-cols-1 gap-2">'
+                + toggle('ref-set-enabled','Referral System ON/OFF', s.system_enabled)
+                + toggle('ref-set-leaderboard','Leaderboard ON/OFF', s.leaderboard_enabled)
+            + '</div>'
+            + '<button onclick="saveAdRefSettings()" class="w-full gradient-bg text-white font-black py-2.5 rounded-xl shadow active:scale-95 transition-transform text-sm"><i class="fa-solid fa-floppy-disk mr-1"></i>Save Settings</button>'
+            + '</div>';
+    }
+    function saveAdRefSettings(){
+        if(!requireAdmin()) return;
+        const s = {
+            signup_bonus: Math.max(0, Number(getEl('ref-set-signup').value||0)),
+            referrer_signup_bonus: Math.max(0, Number(getEl('ref-set-referrer-signup').value||0)),
+            commission_percent: Math.max(0, Number(getEl('ref-set-commission').value||0)),
+            max_commission_orders: Math.max(0, Number(getEl('ref-set-maxorders').value||0)),
+            min_transfer: Math.max(0, Number(getEl('ref-set-mintransfer').value||0)),
+            system_enabled: getEl('ref-set-enabled').checked,
+            leaderboard_enabled: getEl('ref-set-leaderboard').checked
+        };
+        saveReferralSettings(s).then(() => { showToast('Referral settings saved ✓'); renderAdminReferral(); }).catch(()=>{ showToast('Save failed'); });
+    }
+
+    function adRefUsersHtml(){
+        const users = (getDB(DB_U)||[]).filter(u => u.phone);
+        const money = v => '৳' + Number(v||0).toLocaleString('en-IN');
+        const rows = users.length ? users.map(u => {
+            const refCount = Array.isArray(u.downline) ? u.downline.length : (getDB(DB_U)||[]).filter(x=>String(x.referredBy)===String(u.refId)).length;
+            const disabled = u.referralDisabled;
+            return '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-bold">' + adEsc(u.name||'') + '<div class="text-[9px] text-gray-400">' + adEsc(u.phone) + '</div></td>'
+                + '<td class="p-2 text-[10px] text-gray-500">' + adEsc(u.refId||'-') + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-purple-700">' + money(u.refBalance) + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-center">' + refCount + '</td>'
+                + '<td class="p-2">' + (disabled?'<span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[9px] font-black">Disabled</span>':'<span class="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[9px] font-black">Active</span>') + '</td>'
+                + '<td class="p-2 whitespace-nowrap">'
+                    + '<button onclick="adRefEditBalance(\'' + adEsc(u.phone) + '\')" class="bg-sky-500 text-white px-2 py-1 rounded text-[9px] font-black mr-1 active:scale-95" title="Edit/Bonus/Reset"><i class="fa-solid fa-pen"></i></button>'
+                    + '<button onclick="adRefViewDownline(\'' + adEsc(u.phone) + '\')" class="bg-slate-600 text-white px-2 py-1 rounded text-[9px] font-black mr-1 active:scale-95" title="Downline & History"><i class="fa-solid fa-sitemap"></i></button>'
+                    + '<button onclick="adRefToggleDisable(\'' + adEsc(u.phone) + '\')" class="' + (disabled?'bg-green-600':'bg-red-500') + ' text-white px-2 py-1 rounded text-[9px] font-black active:scale-95" title="Enable/Disable"><i class="fa-solid ' + (disabled?'fa-toggle-on':'fa-toggle-off') + '"></i></button>'
+                + '</td></tr>';
+        }).join('') : '<tr><td colspan="6" class="p-3 text-center text-gray-400 text-xs">No users</td></tr>';
+        return '<div class="bg-white rounded-xl shadow-sm border overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-left min-w-[560px]"><thead class="bg-slate-50 border-b"><tr><th class="p-2 text-[9px] font-black text-gray-500">User</th><th class="p-2 text-[9px] font-black text-gray-500">Affiliate ID</th><th class="p-2 text-[9px] font-black text-gray-500">Ref Balance</th><th class="p-2 text-[9px] font-black text-gray-500 text-center">Referrals</th><th class="p-2 text-[9px] font-black text-gray-500">Status</th><th class="p-2 text-[9px] font-black text-gray-500">Actions</th></tr></thead><tbody class="font-bold">' + rows + '</tbody></table></div></div>';
+    }
+    // ---- Referral Balance Edit Modal (Feature 2) ----
+    // Audit log stored in localStorage key 'aura_ref_bal_audit'
+    const DB_REF_AUDIT = 'aura_ref_bal_audit';
+    function getRefAuditLog(){ try{ return JSON.parse(localStorage.getItem(DB_REF_AUDIT)||'[]'); }catch(e){ return []; } }
+    function saveRefAuditLog(log){ localStorage.setItem(DB_REF_AUDIT, JSON.stringify(log)); }
+    function addRefAuditEntry(entry){ const log = getRefAuditLog(); log.unshift(entry); saveRefAuditLog(log.slice(0,500)); }
+
+    function adRefEditBalance(phone){
+        if(!requireAdmin()) return;
+        const users = getDB(DB_U) || [];
+        const u = users.find(x => x.phone === phone); if(!u) return;
+        const cur = Number(u.refBalance||0);
+        // Build modal HTML
+        const modalHtml = '<div id="ref-bal-modal-overlay" onclick="if(event.target===this)closeRefBalModal()" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px">'
+            + '<div style="background:#fff;border-radius:16px;width:100%;max-width:380px;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden">'
+                + '<div style="background:linear-gradient(135deg,#0ea5e9,#6366f1);padding:14px 16px;display:flex;align-items:center;justify-content:space-between">'
+                    + '<div><div style="color:#fff;font-size:13px;font-weight:900">রেফারেল ব্যালেন্স সম্পাদনা</div>'
+                    + '<div style="color:rgba(255,255,255,0.8);font-size:11px;margin-top:2px">' + adEsc(u.name||phone) + ' &bull; ' + adEsc(phone) + '</div></div>'
+                    + '<button onclick="closeRefBalModal()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center">&times;</button>'
+                + '</div>'
+                + '<div style="padding:16px;space-y:12px">'
+                    + '<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">'
+                        + '<span style="font-size:11px;font-weight:700;color:#166534">বর্তমান রেফারেল ব্যালেন্স</span>'
+                        + '<span style="font-size:18px;font-weight:900;color:#15803d">৳' + cur.toLocaleString('en-IN') + '</span>'
+                    + '</div>'
+                    + '<div style="margin-bottom:10px">'
+                        + '<label style="display:block;font-size:11px;font-weight:900;color:#374151;margin-bottom:6px">অপারেশন নির্বাচন করুন</label>'
+                        + '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">'
+                            + '<button onclick="setRefBalOp(\'add\')" id="rbop-add" style="padding:8px 4px;border-radius:8px;border:2px solid #0ea5e9;background:#e0f2fe;color:#0369a1;font-size:11px;font-weight:900;cursor:pointer">➕ বৃদ্ধি</button>'
+                            + '<button onclick="setRefBalOp(\'deduct\')" id="rbop-deduct" style="padding:8px 4px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:900;cursor:pointer">➖ হ্রাস</button>'
+                            + '<button onclick="setRefBalOp(\'set\')" id="rbop-set" style="padding:8px 4px;border-radius:8px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:11px;font-weight:900;cursor:pointer">🎯 নির্ধারণ</button>'
+                        + '</div>'
+                    + '</div>'
+                    + '<div style="margin-bottom:10px">'
+                        + '<label style="display:block;font-size:11px;font-weight:900;color:#374151;margin-bottom:4px">পরিমাণ (৳)</label>'
+                        + '<input id="ref-bal-amount" type="number" min="0" placeholder="0" style="width:100%;border:2px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:700;outline:none;box-sizing:border-box" oninput="updateRefBalPreview()">'
+                    + '</div>'
+                    + '<div style="margin-bottom:10px">'
+                        + '<label style="display:block;font-size:11px;font-weight:900;color:#374151;margin-bottom:4px">কারণ / নোট <span style="color:#ef4444">*</span></label>'
+                        + '<textarea id="ref-bal-reason" rows="2" placeholder="পরিবর্তনের কারণ লিখুন..." style="width:100%;border:2px solid #e5e7eb;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;outline:none;resize:none;box-sizing:border-box"></textarea>'
+                    + '</div>'
+                    + '<div id="ref-bal-preview" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:11px;font-weight:700;color:#64748b;display:none">'
+                        + 'নতুন ব্যালেন্স: <span id="ref-bal-preview-val" style="color:#0ea5e9;font-size:13px;font-weight:900"></span>'
+                    + '</div>'
+                    + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+                        + '<button onclick="closeRefBalModal()" style="padding:10px;border-radius:10px;border:2px solid #e5e7eb;background:#fff;color:#374151;font-size:12px;font-weight:900;cursor:pointer">বাতিল</button>'
+                        + '<button onclick="confirmRefBalEdit(\'' + adEsc(phone) + '\',' + cur + ')" style="padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,#0ea5e9,#6366f1);color:#fff;font-size:12px;font-weight:900;cursor:pointer">✓ সংরক্ষণ করুন</button>'
+                    + '</div>'
+                + '</div>'
+            + '</div>'
+        + '</div>';
+        // Inject modal
+        let overlay = document.getElementById('ref-bal-modal-overlay');
+        if(overlay) overlay.remove();
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        window._refBalOp = 'add';
+        window._refBalPhone = phone;
+        document.getElementById('ref-bal-amount').focus();
+    }
+    function setRefBalOp(op){
+        window._refBalOp = op;
+        ['add','deduct','set'].forEach(o => {
+            const btn = document.getElementById('rbop-' + o);
+            if(!btn) return;
+            if(o === op){
+                btn.style.borderColor = '#0ea5e9'; btn.style.background = '#e0f2fe'; btn.style.color = '#0369a1';
+            } else {
+                btn.style.borderColor = '#e5e7eb'; btn.style.background = '#fff'; btn.style.color = '#374151';
+            }
+        });
+        updateRefBalPreview();
+    }
+    function updateRefBalPreview(){
+        const amtEl = document.getElementById('ref-bal-amount');
+        const previewEl = document.getElementById('ref-bal-preview');
+        const previewVal = document.getElementById('ref-bal-preview-val');
+        if(!amtEl || !previewEl || !previewVal) return;
+        const amt = Number(amtEl.value||0);
+        const curBal = Number((getDB(DB_U)||[]).find(x=>x.phone===window._refBalPhone)?.refBalance||0);
+        let newBal = curBal;
+        const op = window._refBalOp || 'add';
+        if(op === 'add') newBal = curBal + amt;
+        else if(op === 'deduct') newBal = Math.max(0, curBal - amt);
+        else if(op === 'set') newBal = Math.max(0, amt);
+        previewEl.style.display = 'block';
+        previewVal.textContent = '৳' + newBal.toLocaleString('en-IN');
+    }
+    function closeRefBalModal(){
+        const el = document.getElementById('ref-bal-modal-overlay');
+        if(el) el.remove();
+    }
+    function confirmRefBalEdit(phone, oldBal){
+        if(!requireAdmin()) return;
+        const amtEl = document.getElementById('ref-bal-amount');
+        const reasonEl = document.getElementById('ref-bal-reason');
+        if(!amtEl || !reasonEl) return;
+        const amt = Number(amtEl.value||0);
+        const reason = (reasonEl.value||'').trim();
+        if(!reason){ showToast('কারণ/নোট লিখুন'); reasonEl.focus(); return; }
+        const op = window._refBalOp || 'add';
+        let uList = getDB(DB_U) || [];
+        const ui = uList.findIndex(x => x.phone === phone); if(ui<0) return;
+        let cur = Number(uList[ui].refBalance||0);
+        let newBal = cur;
+        if(op === 'add') newBal = cur + amt;
+        else if(op === 'deduct') newBal = Math.max(0, cur - amt);
+        else if(op === 'set') newBal = Math.max(0, amt);
+        uList[ui].refBalance = newBal;
+        setDB(DB_U, uList);
+        // Audit log entry
+        const adminPhone = localStorage.getItem(DB_S) || 'ADMIN';
+        addRefAuditEntry({
+            ts: new Date().toISOString(),
+            dt: new Date().toLocaleString('en-US',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+            adminPhone,
+            userPhone: phone,
+            userName: uList[ui].name || phone,
+            op,
+            amount: amt,
+            oldBalance: oldBal,
+            newBalance: newBal,
+            reason
+        });
+        // Referral transaction log
+        const txnType = op === 'add' ? 'admin_add' : op === 'deduct' ? 'admin_deduct' : 'admin_set';
+        saveReferralTxn(makeRefTxn(phone, adminPhone, txnType, op==='deduct'?-amt:newBal-oldBal, reason));
+        // Inbox notification to user
+        addReferralNotification(phone, `🔧 অ্যাডমিন রেফারেল ব্যালেন্স আপডেট: আপনার রেফারেল ব্যালেন্স ${op==='add'?'বৃদ্ধি':op==='deduct'?'হ্রাস':'নির্ধারণ'} করা হয়েছে। পূর্ববর্তী: ৳${oldBal} → নতুন: ৳${newBal}। কারণ: ${reason}`);
+        closeRefBalModal();
+        showToast('রেফারেল ব্যালেন্স আপডেট হয়েছে ✓');
+        renderAdminReferral();
+    }
+    function adRefToggleDisable(phone){
+        if(!requireAdmin()) return;
+        let uList = getDB(DB_U) || []; const ui = uList.findIndex(x => x.phone === phone); if(ui<0) return;
+        uList[ui].referralDisabled = !uList[ui].referralDisabled;
+        setDB(DB_U, uList);
+        showToast(uList[ui].referralDisabled ? 'Referral disabled for user' : 'Referral enabled for user');
+        renderAdminReferral();
+    }
+    function adRefViewDownline(phone){
+        const users = getDB(DB_U) || [];
+        const u = users.find(x => x.phone === phone); if(!u) return;
+        const dl = Array.isArray(u.downline) ? u.downline : users.filter(x=>String(x.referredBy)===String(u.refId)).map(x=>({name:x.name,phone:x.phone,refId:x.refId}));
+        const txns = (window._referralTxns||[]).filter(t => t.beneficiary === phone);
+        let msg = 'Downline of ' + (u.name||phone) + ' (Affiliate ID: ' + (u.refId||'-') + ')\n\n';
+        msg += 'Referred users (' + dl.length + '):\n';
+        msg += dl.length ? dl.map((d,i)=>(i+1)+'. '+(d.name||'-')+' ('+(d.phone||'-')+')').join('\n') : '(none)';
+        msg += '\n\nReferral transactions (' + txns.length + '):\n';
+        msg += txns.length ? txns.slice(0,15).map(t=>'• '+t.type+' ৳'+t.amount+' '+(t.dt||'')).join('\n') : '(none)';
+        alert(msg);
+    }
+
+    function adRefLogsHtml(){
+        const txns = window._referralTxns || [];
+        const money = v => '৳' + Number(v||0).toLocaleString('en-IN');
+        const section = (title, list) => {
+            const rows = list.length ? list.map(t => '<tr class="border-b last:border-0"><td class="p-2 text-[10px] font-bold">' + adEsc(t.fromName||t.beneficiary||'-') + '</td><td class="p-2 text-[10px] text-primary font-black">' + (t.orderId?'#'+adEsc(t.orderId):'-') + '</td><td class="p-2 text-[10px] font-black text-green-700">' + money(t.amount) + '</td><td class="p-2 text-[9px] text-gray-400">' + adEsc(t.dt||'') + '</td></tr>').join('') : '<tr><td colspan="4" class="p-3 text-center text-gray-400 text-xs">No records</td></tr>';
+            return '<div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-4"><div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700">' + title + ' (' + list.length + ')</div><div class="overflow-x-auto"><table class="w-full text-left min-w-[380px]"><thead class="bg-slate-50 border-b"><tr><th class="p-2 text-[9px] font-black text-gray-500">User</th><th class="p-2 text-[9px] font-black text-gray-500">Order</th><th class="p-2 text-[9px] font-black text-gray-500">Amount</th><th class="p-2 text-[9px] font-black text-gray-500">Date</th></tr></thead><tbody class="font-bold">' + rows + '</tbody></table></div></div>';
+        };
+        // Balance Edit Audit Log (Feature 2)
+        const auditLog = getRefAuditLog();
+        const auditRows = auditLog.length ? auditLog.map(e => {
+            const opLabel = e.op==='add'?'<span style="color:#16a34a;font-weight:900">+বৃদ্ধি</span>':e.op==='deduct'?'<span style="color:#dc2626;font-weight:900">-হ্রাস</span>':'<span style="color:#0ea5e9;font-weight:900">নির্ধারণ</span>';
+            return '<tr class="border-b last:border-0">'
+                + '<td class="p-2 text-[10px] font-bold">' + adEsc(e.userName||e.userPhone||'-') + '<div class="text-[9px] text-gray-400">' + adEsc(e.userPhone||'') + '</div></td>'
+                + '<td class="p-2 text-[10px]">' + opLabel + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-gray-500">৳' + Number(e.oldBalance||0).toLocaleString('en-IN') + '</td>'
+                + '<td class="p-2 text-[10px] font-black text-primary">৳' + Number(e.newBalance||0).toLocaleString('en-IN') + '</td>'
+                + '<td class="p-2 text-[10px] text-gray-500 max-w-[120px] truncate" title="' + adEsc(e.reason||'') + '">' + adEsc(e.reason||'-') + '</td>'
+                + '<td class="p-2 text-[9px] text-gray-400">' + adEsc(e.dt||'') + '</td>'
+                + '</tr>';
+        }).join('') : '<tr><td colspan="6" class="p-3 text-center text-gray-400 text-xs">No audit records</td></tr>';
+        const auditSection = '<div class="bg-white rounded-xl shadow-sm border overflow-hidden mb-4">'
+            + '<div class="px-3 py-2 bg-slate-50 border-b font-black text-xs text-gray-700">Balance Edit Audit Log (' + auditLog.length + ')</div>'
+            + '<div class="overflow-x-auto"><table class="w-full text-left min-w-[560px]"><thead class="bg-slate-50 border-b"><tr>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">User</th>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">অপারেশন</th>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">পূর্ববর্তী</th>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">নতুন</th>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">কারণ</th>'
+            + '<th class="p-2 text-[9px] font-black text-gray-500">সময়</th>'
+            + '</tr></thead><tbody class="font-bold">' + auditRows + '</tbody></table></div></div>';
+        return section('Commission Logs', txns.filter(t=>t.type==='commission'))
+            + section('Signup Bonus Logs', txns.filter(t=>t.type==='signup'||t.type==='referrer_signup_bonus'))
+            + section('Transfer Logs', txns.filter(t=>t.type==='transfer'))
+            + auditSection;
     }
 
     // ---- WITHDRAW SETTINGS (Admin Only) ----
@@ -5326,22 +6474,36 @@ function downloadMyImages() {
             return '<div class="border rounded-xl p-4 space-y-2 ' + (r.status==='Approved'?'bg-green-50':r.status==='Rejected'?'bg-red-50':'bg-white') + '"><div class="flex justify-between items-start flex-wrap gap-2"><div><span class="font-black text-xs text-gray-800">' + adEsc(r.user_name||'') + ' (' + adEsc(r.phone||'') + ')</span>' + (r.affiliate_code ? '<span class="ml-2 text-[10px] text-gray-400">Ref: ' + adEsc(r.affiliate_code) + '</span>' : '') + '</div><span class="' + statusColor + ' px-2 py-0.5 rounded text-[10px] font-black">' + adEsc(r.status) + '</span></div><div class="grid grid-cols-2 gap-2 text-xs font-bold"><div><span class="text-gray-400">পদ্ধতি:</span> ' + adEsc(r.method||'') + '</div><div><span class="text-gray-400">পরিমাণ:</span> <span class="text-green-700 font-black">৳' + adNum(r.amount) + '</span></div><div><span class="text-gray-400">TXN ID:</span> ' + adEsc(r.txn_id||'') + '</div><div><span class="text-gray-400">সময়:</span> ' + adEsc(r.dt||'') + '</div></div>' + actBtns + '</div>';
         }).join('');
         c.innerHTML = '<div class="bg-white p-5 rounded-xl shadow-sm border max-w-2xl"><h3 class="font-black text-base text-gray-800 mb-4"><i class="fa-solid fa-wallet mr-1 text-primary"></i> Balance Requests (' + reqs.length + ')</h3><div class="space-y-3">' + rows + '</div></div>';
-        // v14 FIX: Event delegation — no inline onclick with string args, no confirm() dialog
-        // Buttons use data-action + data-* attributes; delegation handles clicks reliably on Android
-        c.addEventListener('click', function(e){
-            var btn = e.target.closest('[data-action]');
-            if(!btn) return;
-            var action = btn.getAttribute('data-action');
-            if(action === 'approve-bal'){
-                var reqId = btn.getAttribute('data-req-id');
-                var phone = btn.getAttribute('data-phone');
-                var amount = Number(btn.getAttribute('data-amount')) || 0;
-                approveBalanceRequest(reqId, phone, amount);
-            } else if(action === 'reject-bal'){
-                var reqId = btn.getAttribute('data-req-id');
-                rejectBalanceRequest(reqId);
-            }
-        }, {once: true});
+        // v15 ROOT-CAUSE FIX (Issue 1): The previous handler used {once:true}, which
+        // permanently removed the listener after the FIRST click anywhere in the container —
+        // so Approve/Reject only worked once (or not at all once a stray click consumed it),
+        // and each re-render stacked NEW {once:true} listeners causing double-processing.
+        // Fix: attach a SINGLE persistent delegated listener exactly ONCE (guarded by a flag
+        // on the container). The container element persists across innerHTML re-renders, so
+        // one listener reliably handles every current and future button, with no stacking
+        // and no self-removal. A per-button in-flight guard prevents double-submits.
+        if(!c._balReqDelegated){
+            c._balReqDelegated = true;
+            c.addEventListener('click', function(e){
+                var btn = e.target.closest('[data-action]');
+                if(!btn || !c.contains(btn)) return;
+                if(btn.disabled || btn._processing) return; // prevent duplicate/double-tap
+                var action = btn.getAttribute('data-action');
+                if(action !== 'approve-bal' && action !== 'reject-bal') return;
+                btn._processing = true;
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                if(action === 'approve-bal'){
+                    var reqId = btn.getAttribute('data-req-id');
+                    var phone = btn.getAttribute('data-phone');
+                    var amount = Number(btn.getAttribute('data-amount')) || 0;
+                    Promise.resolve(approveBalanceRequest(reqId, phone, amount)).catch(function(){}).then(function(){ btn._processing = false; });
+                } else {
+                    var reqId2 = btn.getAttribute('data-req-id');
+                    Promise.resolve(rejectBalanceRequest(reqId2)).catch(function(){}).then(function(){ btn._processing = false; });
+                }
+            });
+        }
     }
 
     // v14: approveBalanceRequest + rejectBalanceRequest moved to main script block for guaranteed global scope
@@ -5553,6 +6715,351 @@ function downloadMyImages() {
         openSupportTicket(ticketId);
         renderAdminSupport();
     }
+
+    // ========================= NOTIFICATION CENTER (Feature 3) =========================
+    // The Notification Center is a slide-in panel that surfaces the same messages
+    // already stored in DB_MSG (the existing inbox system). It adds:
+    //   - per-message read tracking (reuses _inboxReadIds)
+    //   - bell badge on the header (synced with inbox badge)
+    //   - "all" / "unread" filter tabs
+    // The existing Inbox page (view-inbox) is completely untouched.
+
+    let _ncTab = 'all'; // 'all' | 'unread'
+
+    function openNotificationCenter(){
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN') return;
+        const overlay = document.getElementById('notif-center-overlay');
+        const panel   = document.getElementById('notif-center-panel');
+        if(!overlay || !panel) return;
+        overlay.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            overlay.classList.remove('opacity-0');
+            panel.classList.remove('translate-x-full');
+        });
+        renderNotifCenter();
+    }
+
+    function closeNotificationCenter(){
+        const overlay = document.getElementById('notif-center-overlay');
+        const panel   = document.getElementById('notif-center-panel');
+        if(!overlay || !panel) return;
+        overlay.classList.add('opacity-0');
+        panel.classList.add('translate-x-full');
+        setTimeout(() => overlay.classList.add('hidden'), 300);
+    }
+
+    function setNotifTab(tab){
+        _ncTab = tab;
+        document.getElementById('nc-tab-all').className   = tab === 'all'
+            ? 'flex-1 py-2.5 text-[11px] font-black text-primary border-b-2 border-primary'
+            : 'flex-1 py-2.5 text-[11px] font-black text-gray-400 border-b-2 border-transparent';
+        document.getElementById('nc-tab-unread').className = tab === 'unread'
+            ? 'flex-1 py-2.5 text-[11px] font-black text-primary border-b-2 border-primary'
+            : 'flex-1 py-2.5 text-[11px] font-black text-gray-400 border-b-2 border-transparent';
+        renderNotifCenter();
+    }
+
+    function renderNotifCenter(){
+        const body = document.getElementById('notif-center-body');
+        if(!body) return;
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN'){ body.innerHTML = '<p class="text-center text-gray-400 text-sm py-8">লগইন করুন।</p>'; return; }
+
+        const allMsgs = (getDB(DB_MSG) || [])
+            .filter(m => m.to === ph || m.to === 'ALL')
+            .sort((a,b) => new Date(b.dt) - new Date(a.dt));
+
+        const readIds = window._inboxReadIds || [];
+        const msgs = _ncTab === 'unread' ? allMsgs.filter(m => !readIds.includes(m.id)) : allMsgs;
+
+        if(!msgs.length){
+            body.innerHTML = `<div class="text-center py-12">
+                <i class="fa-regular fa-bell-slash text-4xl text-gray-200 mb-3 block"></i>
+                <p class="text-gray-400 text-sm font-bold">${_ncTab === 'unread' ? 'কোনো অপঠিত নোটিফিকেশন নেই' : 'কোনো নোটিফিকেশন নেই'}</p>
+            </div>`;
+            return;
+        }
+
+        const typeIcon  = {tracking:'fa-truck', courier:'fa-box-open', custom:'fa-comment-dots', referral:'fa-gift', commission:'fa-coins', transfer:'fa-money-bill-transfer', signup:'fa-user-plus', referrer_signup_bonus:'fa-gift', admin_add:'fa-circle-plus', admin_deduct:'fa-circle-minus', admin_set:'fa-pen'};
+        const typeColor = {tracking:'text-blue-500', courier:'text-orange-500', custom:'text-green-500', referral:'text-purple-500', commission:'text-yellow-600', transfer:'text-teal-500', signup:'text-sky-500', referrer_signup_bonus:'text-purple-500', admin_add:'text-green-600', admin_deduct:'text-red-500', admin_set:'text-gray-600'};
+
+        body.innerHTML = msgs.map(m => {
+            const isRead = readIds.includes(m.id);
+            const icon   = typeIcon[m.type]  || 'fa-envelope';
+            const color  = typeColor[m.type] || 'text-primary';
+            return `<div onclick="markSingleNotifRead('${adEsc(m.id)}')"
+                class="flex gap-3 p-3 rounded-xl border cursor-pointer transition-all active:scale-[0.98] ${isRead ? 'bg-white border-slate-100' : 'bg-sky-50 border-sky-200 shadow-sm'}">
+                <div class="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center ${isRead ? 'bg-slate-100' : 'bg-white shadow-sm'}">
+                    <i class="fa-solid ${icon} ${color} text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-[12px] font-${isRead ? 'bold' : 'black'} text-gray-800 leading-snug">${adEsc(m.text)}</p>
+                    <p class="text-[10px] text-gray-400 mt-1">${adEsc(m.dt||'')}</p>
+                </div>
+                ${!isRead ? '<span class="w-2 h-2 rounded-full bg-sky-500 flex-shrink-0 mt-1.5"></span>' : ''}
+            </div>`;
+        }).join('');
+
+        // Mark all visible as read after a short delay (user opened the panel)
+        setTimeout(() => {
+            const ids = msgs.map(m => m.id).filter(Boolean);
+            if(!ids.length) return;
+            const merged = Array.from(new Set([...(window._inboxReadIds||[]), ...ids]));
+            window._inboxReadIds = merged;
+            updateInboxBadge();
+            updateNotifBellBadge();
+            saveInboxReadIds(merged).catch(()=>{});
+        }, 1200);
+    }
+
+    function markSingleNotifRead(id){
+        if(!id) return;
+        const merged = Array.from(new Set([...(window._inboxReadIds||[]), id]));
+        window._inboxReadIds = merged;
+        updateInboxBadge();
+        updateNotifBellBadge();
+        saveInboxReadIds(merged).catch(()=>{});
+        renderNotifCenter();
+    }
+
+    function markAllNotifsRead(){
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN') return;
+        const allMsgs = (getDB(DB_MSG) || []).filter(m => m.to === ph || m.to === 'ALL');
+        const ids = allMsgs.map(m => m.id).filter(Boolean);
+        const merged = Array.from(new Set([...(window._inboxReadIds||[]), ...ids]));
+        window._inboxReadIds = merged;
+        updateInboxBadge();
+        updateNotifBellBadge();
+        saveInboxReadIds(merged).catch(()=>{});
+        renderNotifCenter();
+        showToast('সব নোটিফিকেশন পড়া হয়েছে ✓');
+    }
+
+    // Bell badge (mirrors inbox badge logic but targets notif-bell-badge)
+    function updateNotifBellBadge(){
+        const badge = document.getElementById('notif-bell-badge');
+        if(!badge) return;
+        const ph = localStorage.getItem(DB_S);
+        if(!ph || ph === 'ADMIN'){ badge.style.display = 'none'; return; }
+        const count = inboxUnreadCount();
+        if(count > 0){
+            badge.textContent = count > 99 ? '99+' : String(count);
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // Hook updateNotifBellBadge into the existing updateInboxBadge flow
+    const _origUpdateInboxBadge = updateInboxBadge;
+    function updateInboxBadge(){
+        _origUpdateInboxBadge();
+        updateNotifBellBadge();
+    }
+    // ========================= END NOTIFICATION CENTER =========================
+
+    // ========================= FCM PUSH NOTIFICATIONS (Feature 4) =========================
+    // Firebase Cloud Messaging integration.
+    // Config values below are PLACEHOLDERS — admin must replace them with real Firebase project values.
+    // See MANUAL_STEPS for setup instructions.
+
+    const FCM_CONFIG = {
+        apiKey:            "YOUR_FIREBASE_API_KEY",
+        authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+        projectId:         "YOUR_PROJECT_ID",
+        storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId:             "YOUR_APP_ID",
+        vapidKey:          "YOUR_VAPID_PUBLIC_KEY"   // Web Push certificate key pair (public key)
+    };
+
+    // FCM is initialised lazily when the user grants permission or admin opens the FCM panel.
+    let _fcmApp = null, _fcmMessaging = null, _fcmToken = null;
+
+    async function initFCM(){
+        if(_fcmMessaging) return _fcmMessaging;
+        if(FCM_CONFIG.apiKey === 'YOUR_FIREBASE_API_KEY'){
+            console.warn('[FCM] Firebase not configured — replace FCM_CONFIG values.');
+            return null;
+        }
+        try {
+            // Dynamically load Firebase SDK (compat v9 CDN)
+            if(!window.firebase){
+                await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+                await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
+            }
+            if(!_fcmApp) _fcmApp = firebase.initializeApp(FCM_CONFIG);
+            _fcmMessaging = firebase.messaging(_fcmApp);
+            return _fcmMessaging;
+        } catch(e){ console.error('[FCM] init error:', e); return null; }
+    }
+
+    function loadScript(src){
+        return new Promise((res, rej) => {
+            if(document.querySelector('script[src="'+src+'"]')){ res(); return; }
+            const s = document.createElement('script');
+            s.src = src; s.onload = res; s.onerror = rej;
+            document.head.appendChild(s);
+        });
+    }
+
+    async function requestFCMPermission(){
+        try {
+            const perm = await Notification.requestPermission();
+            if(perm !== 'granted'){ showToast('Push notification permission denied'); return null; }
+            const msg = await initFCM();
+            if(!msg) return null;
+            // Register service worker
+            const reg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+            _fcmToken = await msg.getToken({ vapidKey: FCM_CONFIG.vapidKey, serviceWorkerRegistration: reg });
+            // Save token to Supabase site_settings keyed by user phone
+            const ph = localStorage.getItem(DB_S);
+            if(ph && ph !== 'ADMIN' && _fcmToken){
+                await supabaseRequest('site_settings?on_conflict=key', {
+                    method: 'POST',
+                    prefer: 'resolution=merge-duplicates',
+                    body: JSON.stringify({ key: 'fcm_token_' + ph, value: _fcmToken })
+                }).catch(()=>{});
+            }
+            // Foreground message handler
+            msg.onMessage((payload) => {
+                const n = payload.notification || {};
+                showToast((n.title ? n.title + ': ' : '') + (n.body || 'নতুন নোটিফিকেশন'));
+                // Inject into local message store so Notification Center shows it
+                const msgs = getDB(DB_MSG) || [];
+                msgs.unshift({
+                    id: 'fcm_' + Date.now(),
+                    to: ph,
+                    type: 'custom',
+                    text: (n.title ? n.title + ': ' : '') + (n.body || ''),
+                    dt: new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+                });
+                setDB(DB_MSG, msgs);
+                updateNotifBellBadge();
+            });
+            showToast('Push notifications enabled ✓');
+            return _fcmToken;
+        } catch(e){ console.error('[FCM] permission error:', e); showToast('Push notification setup failed'); return null; }
+    }
+
+    // Admin: send FCM push via Firebase REST API (requires server key — stored in admin settings)
+    async function adminSendFCMPush(title, body, targetPhone){
+        const serverKey = (adGet('fcm_server_key') || '').trim();
+        if(!serverKey){ showToast('FCM Server Key not set in settings'); return; }
+        // Collect tokens
+        let tokens = [];
+        if(targetPhone === 'ALL'){
+            const users = getDB(DB_U) || [];
+            for(const u of users){
+                try {
+                    const rows = await supabaseRequest('site_settings?key=eq.fcm_token_' + encodeURIComponent(u.phone) + '&select=value');
+                    if(Array.isArray(rows) && rows[0] && rows[0].value) tokens.push(rows[0].value);
+                } catch(e){}
+            }
+        } else {
+            try {
+                const rows = await supabaseRequest('site_settings?key=eq.fcm_token_' + encodeURIComponent(targetPhone) + '&select=value');
+                if(Array.isArray(rows) && rows[0] && rows[0].value) tokens.push(rows[0].value);
+            } catch(e){}
+        }
+        if(!tokens.length){ showToast('No FCM tokens found for target'); return; }
+        let sent = 0, failed = 0;
+        for(const token of tokens){
+            try {
+                const r = await fetch('https://fcm.googleapis.com/fcm/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'key=' + serverKey },
+                    body: JSON.stringify({ to: token, notification: { title, body } })
+                });
+                const j = await r.json();
+                if(j.success) sent++; else failed++;
+            } catch(e){ failed++; }
+        }
+        // Log to Supabase
+        await supabaseRequest('site_settings?on_conflict=key', {
+            method: 'POST', prefer: 'resolution=merge-duplicates',
+            body: JSON.stringify({ key: 'fcm_log_' + Date.now(), value: JSON.stringify({ title, body, target: targetPhone, sent, failed, dt: new Date().toISOString() }) })
+        }).catch(()=>{});
+        showToast(`Push sent: ${sent} success, ${failed} failed`);
+        renderAdminFCM();
+    }
+
+    // Admin FCM panel renderer (called from switchAdminTab)
+    function renderAdminFCM(){
+        const c = document.getElementById('ad-mod-fcm'); if(!c) return;
+        const users = getDB(DB_U) || [];
+        const userOpts = users.map(u => `<option value="${adEsc(u.phone)}">${adEsc(u.name)} (${adEsc(u.phone)})</option>`).join('');
+        const savedKey = adGet('fcm_server_key') || '';
+        c.innerHTML = `
+        <div class="p-4 max-w-2xl space-y-5">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white text-lg"><i class="fa-brands fa-google"></i></div>
+                <div><h2 class="font-black text-lg text-gray-800">FCM Push Notifications</h2><p class="text-[11px] text-gray-400">Firebase Cloud Messaging — send browser push to users</p></div>
+            </div>
+            <!-- Server Key Setting -->
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+                <h3 class="font-black text-sm text-amber-800"><i class="fa-solid fa-key mr-1"></i> Firebase Server Key</h3>
+                <p class="text-[11px] text-amber-700">Firebase Console → Project Settings → Cloud Messaging → Server Key</p>
+                <div class="flex gap-2">
+                    <input id="fcm-server-key-inp" type="password" value="${adEsc(savedKey)}" placeholder="AAAAxxxxxxx..." class="ad-inp flex-1">
+                    <button onclick="saveFCMServerKey()" class="bg-amber-500 text-white font-black px-4 py-2 rounded-lg text-xs active:scale-95 transition-transform">সেভ</button>
+                </div>
+            </div>
+            <!-- Send Notification -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border space-y-4">
+                <h3 class="font-black text-sm text-gray-800"><i class="fa-solid fa-paper-plane mr-1 text-primary"></i> নোটিফিকেশন পাঠান</h3>
+                <div>
+                    <label class="ad-lbl">Recipient</label>
+                    <select id="fcm-to" class="ad-inp">
+                        <option value="ALL">📢 সবাইকে (Broadcast)</option>
+                        ${userOpts}
+                    </select>
+                </div>
+                <div>
+                    <label class="ad-lbl">Title</label>
+                    <input id="fcm-title" type="text" placeholder="Notification title..." class="ad-inp">
+                </div>
+                <div>
+                    <label class="ad-lbl">Message Body</label>
+                    <textarea id="fcm-body" rows="3" class="ad-inp" placeholder="Notification message..."></textarea>
+                </div>
+                <button onclick="doAdminSendFCM()" class="gradient-bg text-white font-black px-6 py-3 rounded-xl shadow active:scale-95 transition-transform text-sm w-full">
+                    <i class="fa-solid fa-bell mr-2"></i>Push Notification পাঠান
+                </button>
+            </div>
+            <!-- Setup Instructions -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                <h3 class="font-black text-sm text-gray-700"><i class="fa-solid fa-circle-info mr-1 text-primary"></i> Setup Instructions</h3>
+                <ol class="text-[11px] text-gray-600 space-y-1.5 list-decimal list-inside font-bold">
+                    <li>Firebase Console → Create project → Enable Cloud Messaging</li>
+                    <li>Project Settings → General → Add Web App → Copy firebaseConfig</li>
+                    <li>Update FCM_CONFIG in the HTML source with your project values</li>
+                    <li>Project Settings → Cloud Messaging → Copy Server Key → paste above</li>
+                    <li>Project Settings → Cloud Messaging → Web Push certificates → Generate key pair → copy public key → set as vapidKey in FCM_CONFIG</li>
+                    <li>Upload firebase-messaging-sw.js to your domain root (same origin as the app)</li>
+                    <li>Users must click "Enable Notifications" to grant permission</li>
+                </ol>
+            </div>
+        </div>`;
+    }
+
+    function saveFCMServerKey(){
+        const v = (document.getElementById('fcm-server-key-inp') || {}).value || '';
+        adSet('fcm_server_key', v.trim());
+        showToast('FCM Server Key saved ✓');
+    }
+
+    async function doAdminSendFCM(){
+        const to    = (document.getElementById('fcm-to')    || {}).value || 'ALL';
+        const title = (document.getElementById('fcm-title') || {}).value.trim();
+        const body  = (document.getElementById('fcm-body')  || {}).value.trim();
+        if(!title || !body){ showToast('Title and message required'); return; }
+        await adminSendFCMPush(title, body, to);
+    }
+    // ========================= END FCM =========================
+
     </script>
 
 </html>
